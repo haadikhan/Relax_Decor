@@ -27,3 +27,14 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(home: SplashScreen());
   }
 }
+
+// code to put in index.html for next time we deploy on vercel
+// <script>
+//   if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.getRegistrations().then(function(registrations) {
+//       for (let registration of registrations) {
+//         registration.unregister();
+//       }
+//     });
+//   }
+// </script>
