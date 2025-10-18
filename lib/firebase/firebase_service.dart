@@ -42,13 +42,9 @@ class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _appId;
 
-  // **CRITICAL FIX: Pass the App ID for correct Firestore Pathing**
   FirebaseService({required String appId}) : _appId = appId;
 
-  // Getter to construct the correct collection reference for PUBLIC, SHARED data
   CollectionReference<Map<String, dynamic>> get _inventoryCollectionRef {
-    // This path adheres to the Firebase Security Rules for shared/public data in the Canvas environment:
-    // /artifacts/{appId}/public/data/inventory_items
     return _db
         .collection('artifacts')
         .doc(_appId)
@@ -57,190 +53,726 @@ class FirebaseService {
         .collection('inventory_items');
   }
 
-  // Mock inventory data to seed the database if it is empty.
-  final List<Map<String, dynamic>> _mockInventoryData = [
-    // Beds (Category: Bed)
+  // REAL RELAX DECOR INVENTORY DATA
+  final List<Map<String, dynamic>> _realInventoryData = [
+    // ========== SOFAS ==========
+    // Carol Sofa 3 Seater
+    {
+      'category': 'Sofa',
+      'model': 'Carol Sofa 3 Seater',
+      'design': 'Carol',
+      'size': '188x92x90cm',
+      'color': 'Black & Red Contros',
+      'price': 600.0,
+      'stock': 10,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Carol Sofa 3 Seater',
+      'design': 'Carol',
+      'size': '188x92x90cm',
+      'color': 'Black & White Contros',
+      'price': 600.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Carol Sofa 3 Seater',
+      'design': 'Carol',
+      'size': '188x92x90cm',
+      'color': 'Grey & White Contros',
+      'price': 600.0,
+      'stock': 12,
+    },
+
+    // Carol Sofa 2 Seater
+    {
+      'category': 'Sofa',
+      'model': 'Carol Sofa 2 Seater',
+      'design': 'Carol',
+      'size': '156x92x90cm',
+      'color': 'Black & Red Contros',
+      'price': 600.0,
+      'stock': 7,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Carol Sofa 2 Seater',
+      'design': 'Carol',
+      'size': '156x92x90cm',
+      'color': 'Black & White Contros',
+      'price': 600.0,
+      'stock': 9,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Carol Sofa 2 Seater',
+      'design': 'Carol',
+      'size': '156x92x90cm',
+      'color': 'Grey & White Contros',
+      'price': 600.0,
+      'stock': 11,
+    },
+
+    // Carol Corner Sofa
+    {
+      'category': 'Sofa',
+      'model': 'Carol Corner Sofa',
+      'design': 'Carol Corner',
+      'size': '210x210cm',
+      'color': 'Black & Red Contros',
+      'price': 650.0,
+      'stock': 6,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Carol Corner Sofa',
+      'design': 'Carol Corner',
+      'size': '210x210cm',
+      'color': 'Black & White Contros',
+      'price': 650.0,
+      'stock': 5,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Carol Corner Sofa',
+      'design': 'Carol Corner',
+      'size': '210x210cm',
+      'color': 'Grey & White Contros',
+      'price': 650.0,
+      'stock': 8,
+    },
+
+    // Anton Sofa (Sofa+Bed+Storage)
+    {
+      'category': 'Sofa',
+      'model': 'Anton Sofa',
+      'design': 'Anton',
+      'size': '275x202cm',
+      'color': 'Cream',
+      'price': 720.0,
+      'stock': 4,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Anton Sofa',
+      'design': 'Anton',
+      'size': '275x202cm',
+      'color': 'Grey',
+      'price': 720.0,
+      'stock': 6,
+    },
+
+    // Bostan 3 Seater (Sofa+Bed+Storage)
+    {
+      'category': 'Sofa',
+      'model': 'Bostan 3 Seater',
+      'design': 'Bostan',
+      'size': '245x150cm',
+      'color': 'Grey',
+      'price': 450.0,
+      'stock': 15,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Bostan 3 Seater',
+      'design': 'Bostan',
+      'size': '245x150cm',
+      'color': 'Black',
+      'price': 450.0,
+      'stock': 12,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Bostan 3 Seater',
+      'design': 'Bostan',
+      'size': '245x150cm',
+      'color': 'Cream',
+      'price': 450.0,
+      'stock': 10,
+    },
+
+    // Artic Sofa (Sofa+Bed+Storage)
+    {
+      'category': 'Sofa',
+      'model': 'Artic Sofa',
+      'design': 'Artic',
+      'size': '265x230cm',
+      'color': 'Dark Grey',
+      'price': 700.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Artic Sofa',
+      'design': 'Artic',
+      'size': '265x230cm',
+      'color': 'Light Grey',
+      'price': 700.0,
+      'stock': 7,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Artic Sofa',
+      'design': 'Artic',
+      'size': '265x230cm',
+      'color': 'Black',
+      'price': 700.0,
+      'stock': 9,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Artic Sofa',
+      'design': 'Artic',
+      'size': '265x230cm',
+      'color': 'Cream',
+      'price': 700.0,
+      'stock': 6,
+    },
+
+    // Relax Sofa (Sofa+Bed+Storage)
+    {
+      'category': 'Sofa',
+      'model': 'Relax Sofa',
+      'design': 'Relax',
+      'size': '250x150cm',
+      'color': 'Light Grey',
+      'price': 440.0,
+      'stock': 14,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Relax Sofa',
+      'design': 'Relax',
+      'size': '250x150cm',
+      'color': 'Dark Grey',
+      'price': 440.0,
+      'stock': 11,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Relax Sofa',
+      'design': 'Relax',
+      'size': '250x150cm',
+      'color': 'Black',
+      'price': 440.0,
+      'stock': 13,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Relax Sofa',
+      'design': 'Relax',
+      'size': '250x150cm',
+      'color': 'Cream',
+      'price': 440.0,
+      'stock': 10,
+    },
+
+    // Antario Sofa (Sofa+Bed+Storage)
+    {
+      'category': 'Sofa',
+      'model': 'Antario Sofa',
+      'design': 'Antario',
+      'size': '296x200cm',
+      'color': 'Grey',
+      'price': 630.0,
+      'stock': 7,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Antario Sofa',
+      'design': 'Antario',
+      'size': '296x200cm',
+      'color': 'Black',
+      'price': 630.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Antario Sofa',
+      'design': 'Antario',
+      'size': '296x200cm',
+      'color': 'Black with White Contros',
+      'price': 630.0,
+      'stock': 5,
+    },
+
+    // Handerson Sofa - With Bed Function
+    {
+      'category': 'Sofa',
+      'model': 'Handerson (with Bed)',
+      'design': 'Handerson',
+      'size': '317x253cm',
+      'color': 'Grey',
+      'price': 820.0,
+      'stock': 4,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Handerson (with Bed)',
+      'design': 'Handerson',
+      'size': '317x253cm',
+      'color': 'Black',
+      'price': 820.0,
+      'stock': 3,
+    },
+
+    // Handerson Sofa - Without Bed Function
+    {
+      'category': 'Sofa',
+      'model': 'Handerson (no Bed)',
+      'design': 'Handerson',
+      'size': '317x253cm',
+      'color': 'Grey',
+      'price': 700.0,
+      'stock': 6,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Handerson (no Bed)',
+      'design': 'Handerson',
+      'size': '317x253cm',
+      'color': 'Black',
+      'price': 700.0,
+      'stock': 5,
+    },
+
+    // Enzo Sofa
+    {
+      'category': 'Sofa',
+      'model': 'Enzo Sofa',
+      'design': 'Enzo',
+      'size': '270x165cm',
+      'color': 'Grey',
+      'price': 700.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Enzo Sofa',
+      'design': 'Enzo',
+      'size': '270x165cm',
+      'color': 'Black',
+      'price': 700.0,
+      'stock': 7,
+    },
+
+    // Loca Sofa
+    {
+      'category': 'Sofa',
+      'model': 'Loca Sofa',
+      'design': 'Loca',
+      'size': '265x165cm',
+      'color': 'Grey',
+      'price': 680.0,
+      'stock': 9,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Loca Sofa',
+      'design': 'Loca',
+      'size': '265x165cm',
+      'color': 'Cream',
+      'price': 680.0,
+      'stock': 6,
+    },
+
+    // Ibiza Sofa
+    {
+      'category': 'Sofa',
+      'model': 'Ibiza Sofa',
+      'design': 'Ibiza',
+      'size': '312x223cm',
+      'color': 'Grey',
+      'price': 810.0,
+      'stock': 5,
+    },
+    {
+      'category': 'Sofa',
+      'model': 'Ibiza Sofa',
+      'design': 'Ibiza',
+      'size': '312x223cm',
+      'color': 'Cream',
+      'price': 810.0,
+      'stock': 4,
+    },
+
+    // ========== BEDS (Sample - replace with your real data) ==========
     {
       'category': 'Bed',
       'model': 'Cloud Dreamer',
-      'stock': 45,
-      'price': 1200.00,
       'design': 'Platform',
-      'color': 'Gray',
       'size': 'Queen',
+      'color': 'Gray',
+      'price': 1200.0,
+      'stock': 15,
     },
     {
       'category': 'Bed',
       'model': 'Urban Slumber',
-      'stock': 15,
-      'price': 950.00,
       'design': 'Storage',
-      'color': 'White',
       'size': 'King',
+      'color': 'White',
+      'price': 950.0,
+      'stock': 8,
     },
     {
       'category': 'Bed',
       'model': 'Rustic Retreat',
-      'stock': 5,
-      'price': 1500.00,
       'design': 'Four Poster',
-      'color': 'Oak',
       'size': 'Full',
+      'color': 'Oak',
+      'price': 1500.0,
+      'stock': 5,
     },
-    {
-      'category': 'Bed',
-      'model': 'Minimalist Frame',
-      'stock': 0,
-      'price': 700.00,
-      'design': 'Platform',
-      'color': 'Black',
-      'size': 'Twin',
-    }, // Zero quantity test
-    // Sofas (Category: Sofa)
-    {
-      'category': 'Sofa',
-      'model': 'Sectional Comfort',
-      'stock': 35,
-      'price': 2500.00,
-      'design': 'L-Shape',
-      'color': 'Navy Blue',
-      'size': 'Large',
-    },
-    {
-      'category': 'Sofa',
-      'model': 'Loveseat Lounge',
-      'stock': 20,
-      'price': 1100.00,
-      'design': 'Straight',
-      'color': 'Beige',
-      'size': 'Medium',
-    },
-    {
-      'category': 'Sofa',
-      'model': 'Velvet Chaise',
-      'stock': 10,
-      'price': 1800.00,
-      'design': 'Recliner',
-      'color': 'Emerald Green',
-      'size': 'Small',
-    },
-    {
-      'category': 'Sofa',
-      'model': 'Modular Duo',
-      'stock': 0,
-      'price': 3000.00,
-      'design': 'Modular',
-      'color': 'Light Gray',
-      'size': 'Extra Large',
-    }, // Zero quantity test
-    // Dining Table (Category: Dining Table)
+
+    // ========== DINING TABLES (Sample - replace with your real data) ==========
     {
       'category': 'Dining Table',
       'model': 'Modern Oval',
-      'stock': 25,
-      'price': 800.00,
       'design': 'Glass Top',
-      'color': 'Clear',
       'size': '6-Seater',
+      'color': 'Clear',
+      'price': 800.0,
+      'stock': 12,
     },
     {
       'category': 'Dining Table',
       'model': 'Farmhouse Wood',
-      'stock': 50,
-      'price': 1500.00,
       'design': 'Solid Wood',
-      'color': 'Brown',
       'size': '8-Seater',
+      'color': 'Brown',
+      'price': 1500.0,
+      'stock': 20,
     },
     {
       'category': 'Dining Table',
       'model': 'Compact Circle',
-      'stock': 12,
-      'price': 450.00,
       'design': 'Pedestal',
-      'color': 'White',
       'size': '4-Seater',
+      'color': 'White',
+      'price': 450.0,
+      'stock': 18,
     },
 
-    // TV Table (Category: TV Table)
+    // ========== TV TABLES (Sample - replace with your real data) ==========
     {
       'category': 'TV Table',
       'model': 'Industrial Media',
-      'stock': 40,
-      'price': 350.00,
       'design': 'Metal Frame',
-      'color': 'Black',
       'size': '70 inch',
+      'color': 'Black',
+      'price': 350.0,
+      'stock': 25,
     },
     {
       'category': 'TV Table',
       'model': 'Floating Console',
-      'stock': 22,
-      'price': 250.00,
       'design': 'Wall Mount',
-      'color': 'White',
       'size': '55 inch',
+      'color': 'White',
+      'price': 250.0,
+      'stock': 15,
     },
     {
       'category': 'TV Table',
       'model': 'Classic Stand',
-      'stock': 8,
-      'price': 400.00,
       'design': 'Cabinet',
-      'color': 'Cherry',
       'size': '65 inch',
+      'color': 'Cherry',
+      'price': 400.0,
+      'stock': 10,
     },
 
-    // Wardrobe (Category: Wardrobe)
+    // ========== WARDROBES - RELAX DECOR ==========
+    // Side Mirror - White Color (4 sizes)
     {
       'category': 'Wardrobe',
-      'model': 'Sliding Door 3M',
-      'stock': 18,
-      'price': 900.00,
-      'design': 'Sliding',
-      'color': 'Mirror',
-      'size': 'Triple',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '120x200x58cm',
+      'color': 'White',
+      'price': 650.0,
+      'stock': 8,
     },
     {
       'category': 'Wardrobe',
-      'model': 'Hinged Door 2M',
-      'stock': 40,
-      'price': 750.00,
-      'design': 'Hinged',
-      'color': 'Light Oak',
-      'size': 'Double',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '150x200x58cm',
+      'color': 'White',
+      'price': 750.0,
+      'stock': 10,
     },
     {
       'category': 'Wardrobe',
-      'model': 'Corner Storage',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '180x215x58cm',
+      'color': 'White',
+      'price': 850.0,
+      'stock': 12,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '200x215x58cm',
+      'color': 'White',
+      'price': 950.0,
+      'stock': 9,
+    },
+
+    // Side Mirror - Black Color (4 sizes)
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '120x200x58cm',
+      'color': 'Black',
+      'price': 650.0,
+      'stock': 7,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '150x200x58cm',
+      'color': 'Black',
+      'price': 750.0,
+      'stock': 9,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '180x215x58cm',
+      'color': 'Black',
+      'price': 850.0,
+      'stock': 11,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '200x215x58cm',
+      'color': 'Black',
+      'price': 950.0,
+      'stock': 8,
+    },
+
+    // Side Mirror - Grey Color (4 sizes)
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '120x200x58cm',
+      'color': 'Grey',
+      'price': 650.0,
       'stock': 6,
-      'price': 600.00,
-      'design': 'Corner Unit',
-      'color': 'Pine',
-      'size': 'Single',
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '150x200x58cm',
+      'color': 'Grey',
+      'price': 750.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '180x215x58cm',
+      'color': 'Grey',
+      'price': 850.0,
+      'stock': 10,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Side Mirror Wardrobe',
+      'design': 'Side Mirror',
+      'size': '200x215x58cm',
+      'color': 'Grey',
+      'price': 950.0,
+      'stock': 7,
+    },
+
+    // Center Mirror - Black Color (4 sizes)
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '120x200x58cm',
+      'color': 'Black',
+      'price': 680.0,
+      'stock': 9,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '150x200x58cm',
+      'color': 'Black',
+      'price': 780.0,
+      'stock': 11,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '180x215x58cm',
+      'color': 'Black',
+      'price': 880.0,
+      'stock': 13,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '200x215x58cm',
+      'color': 'Black',
+      'price': 980.0,
+      'stock': 10,
+    },
+
+    // Center Mirror - White Color (4 sizes)
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '120x200x58cm',
+      'color': 'White',
+      'price': 680.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '150x200x58cm',
+      'color': 'White',
+      'price': 780.0,
+      'stock': 10,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '180x215x58cm',
+      'color': 'White',
+      'price': 880.0,
+      'stock': 12,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '200x215x58cm',
+      'color': 'White',
+      'price': 980.0,
+      'stock': 9,
+    },
+
+    // Center Mirror - Grey Color (4 sizes)
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '120x200x58cm',
+      'color': 'Grey',
+      'price': 680.0,
+      'stock': 7,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '150x200x58cm',
+      'color': 'Grey',
+      'price': 780.0,
+      'stock': 9,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '180x215x58cm',
+      'color': 'Grey',
+      'price': 880.0,
+      'stock': 11,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Center Mirror Wardrobe',
+      'design': 'Center Mirror',
+      'size': '200x215x58cm',
+      'color': 'Grey',
+      'price': 980.0,
+      'stock': 8,
+    },
+
+    // Internal Side - White Color (4 sizes)
+    {
+      'category': 'Wardrobe',
+      'model': 'Internal Side Wardrobe',
+      'design': 'Internal Side',
+      'size': '120x200x58cm',
+      'color': 'White',
+      'price': 620.0,
+      'stock': 10,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Internal Side Wardrobe',
+      'design': 'Internal Side',
+      'size': '150x200x58cm',
+      'color': 'White',
+      'price': 720.0,
+      'stock': 12,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Internal Side Wardrobe',
+      'design': 'Internal Side',
+      'size': '180x215x58cm',
+      'color': 'White',
+      'price': 820.0,
+      'stock': 14,
+    },
+    {
+      'category': 'Wardrobe',
+      'model': 'Internal Side Wardrobe',
+      'design': 'Internal Side',
+      'size': '200x215x58cm',
+      'color': 'White',
+      'price': 920.0,
+      'stock': 11,
     },
   ];
 
-  /// Checks if the inventory collection is empty and seeds it with mock data if necessary.
+  /// Checks if the inventory collection is empty and seeds it with REAL RELAX DECOR data if necessary.
   Future<void> seedInventoryIfEmpty() async {
     try {
-      // Use the correct collection reference
       final snapshot = await _inventoryCollectionRef.limit(1).get();
       if (snapshot.docs.isEmpty) {
-        debugPrint('Inventory collection is empty. Seeding with mock data...');
+        debugPrint('🔄 Inventory empty. Seeding RELAX DECOR data...');
         final batch = _db.batch();
-        for (var itemData in _mockInventoryData) {
-          final docRef = _inventoryCollectionRef
-              .doc(); // Use the correct ref for new doc
+        for (var itemData in _realInventoryData) {
+          final docRef = _inventoryCollectionRef.doc();
           batch.set(docRef, itemData);
         }
         await batch.commit();
-        debugPrint('Seeding complete.');
+        debugPrint(
+          '✅ Seeded ${_realInventoryData.length} items (35 Sofas + samples for other categories)',
+        );
+      } else {
+        debugPrint('✓ Inventory already contains data. Skipping seed.');
       }
     } catch (e) {
-      // This is where the permission error was being caught earlier
-      debugPrint('Error seeding inventory: $e');
-      rethrow; // Re-throw the error so the caller knows the operation failed
+      debugPrint('❌ Error seeding inventory: $e');
+      rethrow;
     }
   }
 
@@ -251,13 +783,11 @@ class FirebaseService {
     String? color,
     String? size,
   }) {
-    // Use the correct collection reference
     Query query = _inventoryCollectionRef.where(
       'category',
       isEqualTo: categoryName,
     );
 
-    // Apply filters if they are selected and not the default "All" option
     if (design != null && !design.startsWith('All ')) {
       query = query.where('design', isEqualTo: design);
     }
@@ -279,14 +809,10 @@ class FirebaseService {
     String categoryName,
     String fieldName,
   ) {
-    // Use the correct collection reference
     return _inventoryCollectionRef
         .where('category', isEqualTo: categoryName)
         .snapshots()
         .map((snapshot) {
-          // FIX for list_element_type_not_assignable:
-          // 1. Filter out nulls/empty strings.
-          // 2. Use .map((value) => value!) to assert the remaining elements are non-nullable String.
           final List<String> values = snapshot.docs
               .map((doc) => doc.data()[fieldName] as String?)
               .where((value) => value != null && value!.isNotEmpty)
@@ -302,18 +828,14 @@ class FirebaseService {
   }
 
   Future<void> sellItem(String itemId) async {
-    final itemRef = _inventoryCollectionRef.doc(itemId); // Use the correct ref
-    // Note: Exceptions thrown inside runTransaction (like our 'Item is out of stock!')
-    // are often wrapped by the Dart SDK, which is handled in the caller's catch block.
+    final itemRef = _inventoryCollectionRef.doc(itemId);
     await _db.runTransaction((transaction) async {
       final doc = await transaction.get(itemRef);
       if (!doc.exists) throw Exception('Item not found');
-      // The Firestore document uses int for stock, so it's safe to cast the number to int
       final currentStock = (doc.data() as Map<String, dynamic>)['stock'] as int;
       if (currentStock > 0) {
         transaction.update(itemRef, {'stock': currentStock - 1});
       } else {
-        // Custom error for out of stock
         throw Exception('Item is out of stock!');
       }
     });
@@ -321,20 +843,18 @@ class FirebaseService {
 
   Future<void> updateStock(String itemId, int newQuantity) async {
     if (newQuantity < 0) throw Exception('Stock quantity cannot be negative.');
-    final itemRef = _inventoryCollectionRef.doc(itemId); // Use the correct ref
+    final itemRef = _inventoryCollectionRef.doc(itemId);
     await itemRef.update({'stock': newQuantity});
   }
 
   Future<void> increaseStock(String itemId, int increaseAmount) async {
     if (increaseAmount <= 0)
-      // ignore: curly_braces_in_flow_control_structures
       throw Exception('Increase amount must be positive.');
-    final itemRef = _inventoryCollectionRef.doc(itemId); // Use the correct ref
+    final itemRef = _inventoryCollectionRef.doc(itemId);
     await itemRef.update({'stock': FieldValue.increment(increaseAmount)});
   }
 
   Stream<int> streamTotalStock(String categoryName) {
-    // Use the correct collection reference
     return _inventoryCollectionRef
         .where('category', isEqualTo: categoryName)
         .snapshots()
