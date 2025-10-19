@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inventory_system/firebase/firebase_service.dart';
 import 'package:inventory_system/login_screen.dart';
+import 'package:inventory_system/sales_screen.dart';
+import 'package:inventory_system/sales_report_screen.dart'; // Add this import
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -67,22 +69,15 @@ class _HomeScreenState extends State<HomeScreen>
     setState(() => _isAuthReady = true);
   }
 
-  Future<void> _sellItem(String itemId, String model) async {
-    setState(() => _sellingItems[itemId] = true);
-    try {
-      await _firebaseService.sellItem(itemId);
-      if (mounted)
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Sold one $model')));
-    } catch (e) {
-      if (mounted)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sale failed: ${_parseError(e)}')),
-        );
-    } finally {
-      setState(() => _sellingItems.remove(itemId));
-    }
+  // MODIFIED: Updated _sellItem to navigate to SalesScreen with the item
+  Future<void> _sellItem(FurnitureItem item) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            SalesScreen(item: item, firebaseService: _firebaseService),
+      ),
+    );
   }
 
   String _parseError(dynamic e) {
@@ -456,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen>
               item: item,
               isLow: item.stock <= _lowStockThreshold,
               isSelling: _sellingItems[item.id] == true,
-              onSell: () => _sellItem(item.id, item.model),
+              onSell: () => _sellItem(item), // MODIFIED: Pass the item object
               onSet: () =>
                   _showStockDialog(item.id, item.model, item.stock, false),
               onAdd: () =>
@@ -531,33 +526,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.teal.shade700),
-              child: const Text(
-                'Relax Decor',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.logout,
-                color: Colors.redAccent,
-                size: 26,
-              ),
-              title: const Text('Logout', style: TextStyle(fontSize: 18)),
-              onTap: _logout,
-            ),
-          ],
-        ),
-      ),
+      drawer: _buildDrawer(isMobile), // MODIFIED: Use the drawer builder method
       body: Column(
         children: [
           Padding(
@@ -637,6 +606,52 @@ class _HomeScreenState extends State<HomeScreen>
                   .map((c) => _buildTabContent(c, isMobile))
                   .toList(),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // NEW: Drawer builder method with Sales Report option
+  Widget _buildDrawer(bool isMobile) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.teal.shade700),
+            child: const Text(
+              'Relax Decor',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.analytics, color: Colors.blue, size: 26),
+            title: const Text('Sales Report', style: TextStyle(fontSize: 18)),
+            onTap: () {
+              Navigator.pop(context); // Close drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SalesReportScreen(firebaseService: _firebaseService),
+                ),
+              );
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.redAccent,
+              size: 26,
+            ),
+            title: const Text('Logout', style: TextStyle(fontSize: 18)),
+            onTap: _logout,
           ),
         ],
       ),
