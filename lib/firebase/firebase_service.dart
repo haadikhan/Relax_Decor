@@ -361,6 +361,34 @@ class FirebaseService {
   }
 
   // NEW: Get sales records for a specific category in a month
+  //   Stream<List<SalesRecord>> getCategoryMonthlySales(
+  //     String category,
+  //     int year,
+  //     int month,
+  //   ) {
+  //     final startDate = DateTime(year, month, 1);
+  //     final endDate = DateTime(
+  //       year,
+  //       month + 1,
+  //       1,
+  //     ).subtract(const Duration(days: 1));
+
+  //     return _salesCollectionRef
+  //         .where('category', isEqualTo: category)
+  //         .where(
+  //           'saleDate',
+  //           isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+  //         )
+  //         .where('saleDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+  //         .orderBy('saleDate', descending: true)
+  //         .snapshots()
+  //         .map(
+  //           (snapshot) => snapshot.docs
+  //               .map((doc) => SalesRecord.fromFirestore(doc))
+  //               .toList(),
+  //         );
+  //   }
+  // }
   Stream<List<SalesRecord>> getCategoryMonthlySales(
     String category,
     int year,
@@ -375,12 +403,10 @@ class FirebaseService {
 
     return _salesCollectionRef
         .where('category', isEqualTo: category)
-        .where(
-          'saleDate',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        )
-        .where('saleDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-        .orderBy('saleDate', descending: true)
+        // TEMPORARILY REMOVE THESE LINES:
+        // .where('saleDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        // .where('saleDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+        // .orderBy('saleDate', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
