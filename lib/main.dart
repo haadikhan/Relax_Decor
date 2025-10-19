@@ -8,6 +8,7 @@ import 'package:inventory_system/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  runApp(MyApp());
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -16,7 +17,6 @@ void main() async {
   } catch (e) {
     print('❌ Firebase initialization failed: $e');
   }
-  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

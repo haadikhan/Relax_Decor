@@ -25,11 +25,6 @@ class _HomeScreenState extends State<HomeScreen>
   String? _selectedColor = 'All Colors';
   String? _selectedSize = 'All Sizes';
 
-  double _scale(double size) {
-    final width = MediaQuery.of(context).size.width;
-    return size * (width / 1200).clamp(0.5, 1.2);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -128,12 +123,15 @@ class _HomeScreenState extends State<HomeScreen>
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: Text(
           '${isIncrease ? "Add" : "Set"} Stock for $model',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(isIncrease ? 'Enter quantity to add:' : 'Set total quantity:'),
+            Text(
+              isIncrease ? 'Enter quantity to add:' : 'Set total quantity:',
+              style: const TextStyle(fontSize: 14),
+            ),
             const SizedBox(height: 15),
             TextField(
               controller: controller,
@@ -221,14 +219,14 @@ class _HomeScreenState extends State<HomeScreen>
           children: [
             CircleAvatar(
               backgroundColor: color.withOpacity(isLow ? 0.2 : 0.1),
-              radius: _scale(isMobile ? 16 : 20),
-              child: Icon(icon, color: color, size: _scale(isMobile ? 18 : 24)),
+              radius: isMobile ? 18 : 24,
+              child: Icon(icon, color: color, size: isMobile ? 20 : 28),
             ),
-            SizedBox(height: _scale(4)),
+            const SizedBox(height: 6),
             Text(
               '$count',
               style: TextStyle(
-                fontSize: _scale(isMobile ? 14 : 20),
+                fontSize: isMobile ? 16 : 22,
                 fontWeight: isLow ? FontWeight.w900 : FontWeight.bold,
                 color: isLow ? Colors.red.shade700 : color.shade800,
               ),
@@ -237,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen>
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: _scale(isMobile ? 8 : 12),
+                fontSize: isMobile ? 10 : 14,
                 color: Colors.grey,
               ),
             ),
@@ -245,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen>
               Text(
                 'LOW',
                 style: TextStyle(
-                  fontSize: _scale(6),
+                  fontSize: isMobile ? 8 : 10,
                   fontWeight: FontWeight.w900,
                   color: Colors.red.shade700,
                 ),
@@ -258,18 +256,18 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildFilterRow(String category, bool isMobile) {
     return Container(
-      padding: EdgeInsets.all(_scale(isMobile ? 14 : 20)),
+      padding: EdgeInsets.all(isMobile ? 16 : 24),
       margin: EdgeInsets.symmetric(
-        horizontal: _scale(isMobile ? 10 : 20),
-        vertical: _scale(isMobile ? 14 : 8),
+        horizontal: isMobile ? 12 : 24,
+        vertical: isMobile ? 16 : 12,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(_scale(15)),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             color: Colors.teal.withOpacity(0.1),
-            blurRadius: _scale(10),
+            blurRadius: 10,
             offset: const Offset(0, 2),
           ),
         ],
@@ -278,11 +276,11 @@ class _HomeScreenState extends State<HomeScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: _scale(14)),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               'Filter Inventory',
               style: TextStyle(
-                fontSize: _scale(isMobile ? 17 : 20),
+                fontSize: isMobile ? 18 : 22,
                 fontWeight: FontWeight.bold,
                 color: Colors.teal.shade800,
               ),
@@ -297,14 +295,14 @@ class _HomeScreenState extends State<HomeScreen>
                   category,
                   (v) => setState(() => _selectedDesign = v),
                 ),
-                SizedBox(height: _scale(14)),
+                const SizedBox(height: 16),
                 _buildFilter(
                   'Size',
                   _selectedSize,
                   category,
                   (v) => setState(() => _selectedSize = v),
                 ),
-                SizedBox(height: _scale(14)),
+                const SizedBox(height: 16),
                 _buildFilter(
                   'Color',
                   _selectedColor,
@@ -318,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen>
               children: [
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: _scale(4)),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: _buildFilter(
                       'Design',
                       _selectedDesign,
@@ -329,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: _scale(4)),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: _buildFilter(
                       'Size',
                       _selectedSize,
@@ -340,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: _scale(4)),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: _buildFilter(
                       'Color',
                       _selectedColor,
@@ -370,10 +368,7 @@ class _HomeScreenState extends State<HomeScreen>
       builder: (context, snapshot) {
         final allOption = 'All ${field}s';
         final dataItems = snapshot.data ?? [];
-        final items = {
-          allOption,
-          ...dataItems,
-        }.toList(); // Use Set to remove duplicates
+        final items = {allOption, ...dataItems}.toList();
         final selected = (value != null && items.contains(value))
             ? value
             : allOption;
@@ -382,28 +377,26 @@ class _HomeScreenState extends State<HomeScreen>
           value: selected,
           decoration: InputDecoration(
             labelText: field,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: _scale(15),
+              fontSize: 15,
             ),
             isDense: true,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(_scale(8)),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: _scale(12),
-              vertical: _scale(14),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 16,
             ),
           ),
-          icon: Icon(Icons.keyboard_arrow_down, size: _scale(26)),
+          icon: const Icon(Icons.keyboard_arrow_down, size: 28),
           items: items
               .map<DropdownMenuItem<String>>(
                 (v) => DropdownMenuItem<String>(
                   value: v,
                   child: Text(
                     v,
-                    style: TextStyle(
-                      fontSize: _scale(16),
+                    style: const TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -441,14 +434,11 @@ class _HomeScreenState extends State<HomeScreen>
             children: [
               _buildFilterRow(category, isMobile),
               Padding(
-                padding: EdgeInsets.all(_scale(40)),
+                padding: const EdgeInsets.all(40),
                 child: Center(
                   child: Text(
                     'No $category items match filters',
-                    style: TextStyle(
-                      fontSize: _scale(16),
-                      color: Colors.grey.shade600,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
                   ),
                 ),
               ),
@@ -457,7 +447,7 @@ class _HomeScreenState extends State<HomeScreen>
         }
 
         return ListView.builder(
-          padding: EdgeInsets.only(bottom: _scale(15)),
+          padding: const EdgeInsets.only(bottom: 16),
           itemCount: items.length + 1,
           itemBuilder: (context, index) {
             if (index == 0) return _buildFilterRow(category, isMobile);
@@ -471,7 +461,6 @@ class _HomeScreenState extends State<HomeScreen>
                   _showStockDialog(item.id, item.model, item.stock, false),
               onAdd: () =>
                   _showStockDialog(item.id, item.model, item.stock, true),
-              scale: _scale,
               isMobile: isMobile,
             );
           },
@@ -490,13 +479,10 @@ class _HomeScreenState extends State<HomeScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(color: Colors.teal.shade600),
-              SizedBox(height: _scale(20)),
+              const SizedBox(height: 24),
               Text(
                 'Initializing...',
-                style: TextStyle(
-                  fontSize: _scale(16),
-                  color: Colors.teal.shade800,
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.teal.shade800),
               ),
             ],
           ),
@@ -504,7 +490,9 @@ class _HomeScreenState extends State<HomeScreen>
       );
     }
 
-    final isMobile = MediaQuery.of(context).size.width < 600;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
 
     return Scaffold(
       backgroundColor: Colors.teal.shade50,
@@ -512,14 +500,14 @@ class _HomeScreenState extends State<HomeScreen>
         title: Text(
           'Inventory Dashboard',
           style: TextStyle(
-            fontSize: _scale(isMobile ? 18 : 24),
+            fontSize: isMobile ? 20 : 26,
             fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.teal.shade800,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(_scale(50)),
+          preferredSize: Size.fromHeight(isMobile ? 48 : 56),
           child: TabBar(
             controller: _tabController,
             isScrollable: isMobile,
@@ -529,7 +517,9 @@ class _HomeScreenState extends State<HomeScreen>
                   (t) => Tab(
                     child: Text(
                       t,
-                      style: TextStyle(fontSize: _scale(isMobile ? 14 : 18)),
+                      style: TextStyle(
+                        fontSize: isMobile ? 14 : (isTablet ? 16 : 18),
+                      ),
                     ),
                   ),
                 )
@@ -537,7 +527,7 @@ class _HomeScreenState extends State<HomeScreen>
             labelColor: Colors.teal.shade800,
             unselectedLabelColor: Colors.grey.shade600,
             indicatorColor: Colors.teal.shade500,
-            indicatorWeight: _scale(3),
+            indicatorWeight: 3,
           ),
         ),
       ),
@@ -547,22 +537,22 @@ class _HomeScreenState extends State<HomeScreen>
           children: [
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.teal.shade700),
-              child: Text(
+              child: const Text(
                 'Relax Decor',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: _scale(26),
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.logout,
                 color: Colors.redAccent,
-                size: _scale(24),
+                size: 26,
               ),
-              title: Text('Logout', style: TextStyle(fontSize: _scale(18))),
+              title: const Text('Logout', style: TextStyle(fontSize: 18)),
               onTap: _logout,
             ),
           ],
@@ -571,19 +561,19 @@ class _HomeScreenState extends State<HomeScreen>
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(_scale(isMobile ? 12 : 20)),
+            padding: EdgeInsets.all(isMobile ? 12 : 24),
             child: Container(
               padding: EdgeInsets.symmetric(
-                vertical: _scale(isMobile ? 14 : 20),
-                horizontal: _scale(5),
+                vertical: isMobile ? 16 : 24,
+                horizontal: 8,
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(_scale(15)),
+                borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.teal.withOpacity(0.2),
-                    blurRadius: _scale(10),
+                    blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -658,7 +648,6 @@ class _ItemCard extends StatelessWidget {
   final FurnitureItem item;
   final bool isLow, isSelling, isMobile;
   final VoidCallback onSell, onSet, onAdd;
-  final double Function(double) scale;
 
   const _ItemCard({
     required this.item,
@@ -667,101 +656,220 @@ class _ItemCard extends StatelessWidget {
     required this.onSell,
     required this.onSet,
     required this.onAdd,
-    required this.scale,
     required this.isMobile,
   });
+
+  static IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'Sofa':
+        return Icons.chair_alt;
+      case 'Bed':
+        return Icons.bed;
+      case 'Dining Table':
+        return Icons.restaurant;
+      case 'TV Table':
+        return Icons.tv;
+      case 'Wardrobe':
+        return Icons.checkroom;
+      default:
+        return Icons.category;
+    }
+  }
+
+  static String _getCategoryImage(String category, String design) {
+    // Example images - Replace these URLs with your actual product images
+    final Map<String, Map<String, String>> categoryImages = {
+      'Sofa': {
+        'Carol':
+            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400',
+        'Anton':
+            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
+        'Bostan':
+            'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=400',
+        'Artic':
+            'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400',
+        'Relax':
+            'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=400',
+        'Antario':
+            'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=400',
+        'Handerson':
+            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400',
+        'Enzo':
+            'https://images.unsplash.com/photo-1558211583-803ea7c22743?w=400',
+        'Loca':
+            'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400',
+        'Ibiza':
+            'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=400',
+        'Carol Corner':
+            'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400',
+      },
+      'Bed': {
+        'Platform':
+            'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=400',
+        'Storage':
+            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400',
+        'Four Poster':
+            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400',
+      },
+      'Dining Table': {
+        'Glass Top':
+            'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400',
+        'Solid Wood':
+            'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=400',
+        'Pedestal':
+            'https://images.unsplash.com/photo-1617806118062-17c3006f30ca?w=400',
+      },
+      'TV Table': {
+        'Metal Frame':
+            'https://images.unsplash.com/photo-1593359863503-f598de57d1eb?w=400',
+        'Wall Mount':
+            'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=400',
+        'Cabinet':
+            'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=400',
+      },
+      'Wardrobe': {
+        'Side Mirror':
+            'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400',
+        'Center Mirror':
+            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+        'Internal Side':
+            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=400',
+      },
+    };
+
+    return categoryImages[category]?[design] ??
+        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400';
+  }
 
   @override
   Widget build(BuildContext context) {
     final stockColor = isLow ? Colors.red.shade700 : Colors.teal.shade700;
 
     return Card(
-      elevation: scale(4),
+      elevation: 4,
       margin: EdgeInsets.symmetric(
-        horizontal: scale(isMobile ? 12 : 24),
-        vertical: scale(8),
+        horizontal: isMobile ? 12 : 24,
+        vertical: 10,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(scale(12)),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ExpansionTile(
         tilePadding: EdgeInsets.symmetric(
-          horizontal: scale(isMobile ? 14 : 20),
-          vertical: scale(12),
+          horizontal: isMobile ? 14 : 20,
+          vertical: 12,
         ),
         leading: Container(
-          width: scale(isMobile ? 45 : 55),
-          height: scale(isMobile ? 45 : 55),
+          width: isMobile ? 48 : 60,
+          height: isMobile ? 48 : 60,
           decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(scale(8)),
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300, width: 1),
           ),
-          child: Icon(
-            Icons.palette_outlined,
-            size: scale(isMobile ? 28 : 35),
-            color: Colors.teal.shade400,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: item.design != null
+                ? Image.network(
+                    _getCategoryImage(item.category, item.design!),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      _getCategoryIcon(item.category),
+                      size: isMobile ? 28 : 36,
+                      color: Colors.teal.shade400,
+                    ),
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.teal.shade400,
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Icon(
+                    _getCategoryIcon(item.category),
+                    size: isMobile ? 28 : 36,
+                    color: Colors.teal.shade400,
+                  ),
           ),
         ),
         title: Text(
           item.model,
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            fontSize: scale(isMobile ? 16 : 20),
+            fontSize: isMobile ? 16 : 20,
           ),
         ),
-        subtitle: isMobile
-            ? null
-            : Text(
-                '${item.design} | ${item.color} | ${item.size}',
-                style: TextStyle(
-                  fontSize: scale(14),
-                  color: Colors.grey.shade600,
-                ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Text(
+              '${item.design} | ${item.color} | ${item.size}',
+              style: TextStyle(
+                fontSize: isMobile ? 12 : 14,
+                color: Colors.grey.shade600,
               ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '€${item.price.toStringAsFixed(0)}',
+              style: TextStyle(
+                fontSize: isMobile ? 14 : 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.green.shade700,
+              ),
+            ),
+          ],
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                horizontal: scale(10),
-                vertical: scale(6),
+                horizontal: isMobile ? 8 : 12,
+                vertical: isMobile ? 4 : 6,
               ),
               decoration: BoxDecoration(
                 color: isLow
                     ? const Color(0xFFFFCDD2)
                     : stockColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(scale(8)),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: stockColor),
               ),
               child: Text(
                 '${item.stock}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: scale(isMobile ? 13 : 16),
+                  fontSize: isMobile ? 14 : 18,
                   color: stockColor,
                 ),
               ),
             ),
-            SizedBox(width: scale(8)),
+            SizedBox(width: isMobile ? 6 : 10),
             SizedBox(
-              height: scale(36),
+              height: isMobile ? 32 : 38,
               child: OutlinedButton(
                 onPressed: onSet,
                 style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: scale(10)),
+                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12),
                 ),
                 child: Text(
                   'SET',
                   style: TextStyle(
-                    fontSize: scale(isMobile ? 11 : 13),
+                    fontSize: isMobile ? 11 : 13,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            SizedBox(width: scale(8)),
+            SizedBox(width: isMobile ? 6 : 10),
             SizedBox(
-              height: scale(36),
+              height: isMobile ? 32 : 38,
               child: ElevatedButton(
                 onPressed: item.stock > 0 && !isSelling ? onSell : null,
                 style: ElevatedButton.styleFrom(
@@ -769,13 +877,13 @@ class _ItemCard extends StatelessWidget {
                       ? Colors.red.shade600
                       : Colors.teal.shade600,
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: scale(10)),
+                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12),
                 ),
                 child: isSelling
-                    ? SizedBox(
-                        width: scale(15),
-                        height: scale(15),
-                        child: const CircularProgressIndicator(
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.white,
                         ),
@@ -783,7 +891,7 @@ class _ItemCard extends StatelessWidget {
                     : Text(
                         'SELL',
                         style: TextStyle(
-                          fontSize: scale(isMobile ? 11 : 13),
+                          fontSize: isMobile ? 11 : 13,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -793,58 +901,58 @@ class _ItemCard extends StatelessWidget {
         ),
         children: [
           Padding(
-            padding: EdgeInsets.all(scale(18)),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Divider(height: scale(18)),
+                const Divider(height: 20),
                 Text(
                   'Details',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: scale(17),
+                    fontSize: 18,
                     color: Colors.teal.shade800,
                   ),
                 ),
-                SizedBox(height: scale(12)),
+                const SizedBox(height: 14),
                 Text(
-                  'Price: Rs ${item.price}',
+                  'Price: €${item.price.toStringAsFixed(0)}',
                   style: TextStyle(
-                    fontSize: scale(16),
+                    fontSize: 17,
                     fontWeight: FontWeight.w600,
                     color: Colors.green.shade700,
                   ),
                 ),
-                SizedBox(height: scale(6)),
+                const SizedBox(height: 8),
                 Text(
                   'Design: ${item.design}',
-                  style: TextStyle(fontSize: scale(15)),
+                  style: const TextStyle(fontSize: 16),
                 ),
                 Text(
                   'Color: ${item.color}',
-                  style: TextStyle(fontSize: scale(15)),
+                  style: const TextStyle(fontSize: 16),
                 ),
                 Text(
                   'Size: ${item.size}',
-                  style: TextStyle(fontSize: scale(15)),
+                  style: const TextStyle(fontSize: 16),
                 ),
-                SizedBox(height: scale(16)),
+                const SizedBox(height: 18),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: onAdd,
-                    icon: Icon(Icons.add_business, size: scale(22)),
-                    label: Text(
+                    icon: const Icon(Icons.add_business, size: 24),
+                    label: const Text(
                       'Add Stock',
                       style: TextStyle(
-                        fontSize: scale(17),
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green.shade600,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: scale(14)),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
