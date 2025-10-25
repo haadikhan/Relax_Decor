@@ -11,7 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:inventory_system/firebase/firebase_service.dart';
 import 'package:inventory_system/login_screen.dart';
 import 'package:inventory_system/sales_screen.dart';
-import 'package:inventory_system/sales_report_screen.dart'; // Add this import
+import 'package:inventory_system/sales_report_screen.dart';
+import 'package:inventory_system/stock_history_screen.dart'; // NEW: Import
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -533,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ),
       ),
-      drawer: _buildDrawer(isMobile), // MODIFIED: Use the drawer builder method
+      drawer: _buildDrawer(isMobile),
       body: Column(
         children: [
           Padding(
@@ -619,7 +620,7 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // NEW: Drawer builder method with Sales Report option
+  // UPDATED: Drawer builder method with Stock History option
   Widget _buildDrawer(bool isMobile) {
     return Drawer(
       child: ListView(
@@ -628,7 +629,7 @@ class _HomeScreenState extends State<HomeScreen>
           DrawerHeader(
             decoration: BoxDecoration(color: Colors.teal.shade700),
             child: const Text(
-              'Relax Decor',
+              'Mob World',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 28,
@@ -636,6 +637,24 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
+
+          // NEW: Stock History Option
+          ListTile(
+            leading: const Icon(Icons.history, color: Colors.orange, size: 26),
+            title: const Text('Stock History', style: TextStyle(fontSize: 18)),
+            onTap: () {
+              Navigator.pop(context); // Close drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      StockHistoryScreen(firebaseService: _firebaseService),
+                ),
+              );
+            },
+          ),
+
+          // Existing Sales Report Option
           ListTile(
             leading: const Icon(Icons.analytics, color: Colors.blue, size: 26),
             title: const Text('Sales Report', style: TextStyle(fontSize: 18)),
@@ -650,6 +669,7 @@ class _HomeScreenState extends State<HomeScreen>
               );
             },
           ),
+
           const Divider(),
           ListTile(
             leading: const Icon(
