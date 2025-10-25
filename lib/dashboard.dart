@@ -1,3 +1,10 @@
+//removing signup button --done
+//before adding a popup opens to confirm --done
+
+//adding reference who added stock
+//session store during login
+//increase image size of inventory
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

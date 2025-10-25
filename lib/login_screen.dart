@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:inventory_system/dashboard.dart';
-import 'package:inventory_system/signup_screen.dart';
+
 // Corrected import for the main screen
 
 class LoginScreen extends StatefulWidget {
@@ -233,24 +233,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20.0),
 
                 // Registration Link
-                TextButton(
-                  onPressed: () {
-                    // Navigate to the Signup screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    "Don't have an account? Register here.", // Updated text
-                    style: TextStyle(
-                      color: Colors.teal.shade700,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: () {
+                //     // Navigate to the Signup screen
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => const SignupScreen(),
+                //       ),
+                //     );
+                //   },
+                //   child: Text(
+                //     "Don't have an account? Register here.", // Updated text
+                //     style: TextStyle(
+                //       color: Colors.teal.shade700,
+                //       decoration: TextDecoration.underline,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

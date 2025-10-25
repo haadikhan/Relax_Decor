@@ -220,7 +220,7 @@ class FirebaseService {
         .map((snapshot) {
           final List<String> values = snapshot.docs
               .map((doc) => doc.data()[fieldName] as String?)
-              .where((value) => value != null && value!.isNotEmpty)
+              .where((value) => value != null && value.isNotEmpty)
               .map((value) => value!)
               .toSet()
               .toList();
@@ -277,8 +277,9 @@ class FirebaseService {
   }
 
   Future<void> increaseStock(String itemId, int increaseAmount) async {
-    if (increaseAmount <= 0)
+    if (increaseAmount <= 0) {
       throw Exception('Increase amount must be positive.');
+    }
     final itemRef = _inventoryCollectionRef.doc(itemId);
     await itemRef.update({'stock': FieldValue.increment(increaseAmount)});
   }
@@ -288,6 +289,7 @@ class FirebaseService {
         .where('category', isEqualTo: categoryName)
         .snapshots()
         .map(
+          // ignore: avoid_types_as_parameter_names
           (snapshot) => snapshot.docs.fold(0, (sum, doc) {
             return sum + (doc.data()['stock'] as num).toInt();
           }),
@@ -356,6 +358,7 @@ class FirebaseService {
   // NEW: Get total monthly revenue
   Stream<double> getTotalMonthlyRevenue(int year, int month) {
     return getMonthlySales(year, month).map((salesRecords) {
+      // ignore: avoid_types_as_parameter_names
       return salesRecords.fold(0.0, (sum, record) => sum + record.totalAmount);
     });
   }

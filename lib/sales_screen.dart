@@ -19,6 +19,37 @@ class _SalesScreenState extends State<SalesScreen> {
   int _quantity = 1;
   bool _isSelling = false;
 
+  void _showConfirmationDialog() {
+    final totalPrice = _quantity * widget.item.price;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Sale'),
+          content: Text(
+            'Are you sure you want to sell $_quantity ${widget.item.model}(s) for €${totalPrice.toStringAsFixed(0)}?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                _sellItem(); // Proceed with sale
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _sellItem() async {
     if (_quantity <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -241,7 +272,7 @@ class _SalesScreenState extends State<SalesScreen> {
               height: 60,
               child: ElevatedButton(
                 onPressed: widget.item.stock > 0 && !_isSelling
-                    ? _sellItem
+                    ? _showConfirmationDialog // Changed from _sellItem to _showConfirmationDialog
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal.shade600,
