@@ -21,28 +21,46 @@ class _SalesScreenState extends State<SalesScreen> {
 
   void _showConfirmationDialog() {
     final totalPrice = _quantity * widget.item.price;
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirm Sale'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Confirm Sale',
+            style: TextStyle(
+              fontSize: isMobile ? 18 : 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           content: Text(
             'Are you sure you want to sell $_quantity ${widget.item.model}(s) for €${totalPrice.toStringAsFixed(0)}?',
+            style: TextStyle(fontSize: isMobile ? 14 : 16),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
+                Navigator.of(context).pop();
               },
-              child: const Text('No'),
+              child: Text('No', style: TextStyle(fontSize: isMobile ? 14 : 16)),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                _sellItem(); // Proceed with sale
+                Navigator.of(context).pop();
+                _sellItem();
               },
-              child: const Text('Yes'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal.shade600,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(
+                'Yes',
+                style: TextStyle(fontSize: isMobile ? 14 : 16),
+              ),
             ),
           ],
         );
@@ -84,7 +102,7 @@ class _SalesScreenState extends State<SalesScreen> {
           ),
         );
 
-        Navigator.pop(context); // Return to previous screen
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -105,202 +123,466 @@ class _SalesScreenState extends State<SalesScreen> {
   @override
   Widget build(BuildContext context) {
     final totalPrice = _quantity * widget.item.price;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+
+    // Responsive padding
+    final horizontalPadding = isMobile ? 16.0 : (isTablet ? 32.0 : 48.0);
+    final verticalPadding = isMobile ? 16.0 : 24.0;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sell Item'),
+        title: Text(
+          'Sell Item',
+          style: TextStyle(fontSize: isMobile ? 18 : 22),
+        ),
         backgroundColor: Colors.teal.shade700,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Item Details Card
-            Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.item.model,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Category: ${widget.item.category}',
-                      style: TextStyle(color: Colors.grey.shade600),
-                    ),
-                    if (widget.item.design != null)
-                      Text(
-                        'Design: ${widget.item.design}',
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
-                    if (widget.item.color != null)
-                      Text(
-                        'Color: ${widget.item.color}',
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
-                    if (widget.item.size != null)
-                      Text(
-                        'Size: ${widget.item.size}',
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Available Stock: ${widget.item.stock}',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: widget.item.stock > 0
-                                ? Colors.green.shade700
-                                : Colors.red.shade700,
-                            fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // For larger screens, center content with max width
+            final maxWidth = isMobile ? double.infinity : 800.0;
+
+            return Center(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: verticalPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Item Details Card
+                      Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(isMobile ? 16.0 : 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.item.model,
+                                style: TextStyle(
+                                  fontSize: isMobile ? 18 : 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal.shade800,
+                                ),
+                              ),
+                              SizedBox(height: isMobile ? 8 : 12),
+
+                              // Details in a responsive grid
+                              if (isMobile)
+                                // Mobile: Single column
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildDetailRow(
+                                      'Category',
+                                      widget.item.category,
+                                      isMobile,
+                                    ),
+                                    if (widget.item.design != null)
+                                      _buildDetailRow(
+                                        'Design',
+                                        widget.item.design!,
+                                        isMobile,
+                                      ),
+                                    if (widget.item.color != null)
+                                      _buildDetailRow(
+                                        'Color',
+                                        widget.item.color!,
+                                        isMobile,
+                                      ),
+                                    if (widget.item.size != null)
+                                      _buildDetailRow(
+                                        'Size',
+                                        widget.item.size!,
+                                        isMobile,
+                                      ),
+                                  ],
+                                )
+                              else
+                                // Tablet/Desktop: Two columns
+                                Wrap(
+                                  spacing: 24,
+                                  runSpacing: 8,
+                                  children: [
+                                    _buildDetailRow(
+                                      'Category',
+                                      widget.item.category,
+                                      isMobile,
+                                    ),
+                                    if (widget.item.design != null)
+                                      _buildDetailRow(
+                                        'Design',
+                                        widget.item.design!,
+                                        isMobile,
+                                      ),
+                                    if (widget.item.color != null)
+                                      _buildDetailRow(
+                                        'Color',
+                                        widget.item.color!,
+                                        isMobile,
+                                      ),
+                                    if (widget.item.size != null)
+                                      _buildDetailRow(
+                                        'Size',
+                                        widget.item.size!,
+                                        isMobile,
+                                      ),
+                                  ],
+                                ),
+
+                              SizedBox(height: isMobile ? 12 : 16),
+                              const Divider(),
+                              SizedBox(height: isMobile ? 8 : 12),
+
+                              // Stock and Price Row - Responsive
+                              Wrap(
+                                spacing: 16,
+                                runSpacing: 12,
+                                alignment: WrapAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: widget.item.stock > 0
+                                          ? Colors.green.shade50
+                                          : Colors.red.shade50,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: widget.item.stock > 0
+                                            ? Colors.green.shade200
+                                            : Colors.red.shade200,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.inventory_2,
+                                          size: isMobile ? 18 : 20,
+                                          color: widget.item.stock > 0
+                                              ? Colors.green.shade700
+                                              : Colors.red.shade700,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Stock: ${widget.item.stock}',
+                                          style: TextStyle(
+                                            fontSize: isMobile ? 14 : 16,
+                                            color: widget.item.stock > 0
+                                                ? Colors.green.shade700
+                                                : Colors.red.shade700,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Colors.blue.shade200,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.euro,
+                                          size: isMobile ? 18 : 20,
+                                          color: Colors.green.shade700,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '€${widget.item.price.toStringAsFixed(0)}',
+                                          style: TextStyle(
+                                            fontSize: isMobile ? 16 : 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green.shade700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        Text(
-                          'Price: €${widget.item.price.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                      ),
 
-            const SizedBox(height: 30),
+                      SizedBox(height: isMobile ? 24 : 32),
 
-            // Quantity Selection
-            const Text(
-              'Quantity to Sell:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: _quantity > 1
-                      ? () => setState(() => _quantity--)
-                      : null,
-                  icon: const Icon(Icons.remove),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.grey.shade200,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  '$_quantity',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                IconButton(
-                  onPressed: _quantity < widget.item.stock
-                      ? () => setState(() => _quantity++)
-                      : null,
-                  icon: const Icon(Icons.add),
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.grey.shade200,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  'Max: ${widget.item.stock}',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 30),
-
-            // Total Price
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blue.shade100),
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    'Total Amount',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '€${totalPrice.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  Text(
-                    '$_quantity × €${widget.item.price.toStringAsFixed(0)}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
-            ),
-
-            const Spacer(),
-
-            // Sell Button
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton(
-                onPressed: widget.item.stock > 0 && !_isSelling
-                    ? _showConfirmationDialog // Changed from _sellItem to _showConfirmationDialog
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal.shade600,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isSelling
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Text(
-                        'CONFIRM SALE',
+                      // Quantity Selection
+                      Text(
+                        'Quantity to Sell:',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade800,
                         ),
                       ),
+                      SizedBox(height: isMobile ? 12 : 16),
+
+                      Container(
+                        padding: EdgeInsets.all(isMobile ? 16.0 : 20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade300),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Decrease Button
+                            Container(
+                              width: isMobile ? 44 : 56,
+                              height: isMobile ? 44 : 56,
+                              decoration: BoxDecoration(
+                                color: _quantity > 1
+                                    ? Colors.teal.shade600
+                                    : Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: IconButton(
+                                onPressed: _quantity > 1
+                                    ? () => setState(() => _quantity--)
+                                    : null,
+                                icon: Icon(
+                                  Icons.remove,
+                                  color: Colors.white,
+                                  size: isMobile ? 20 : 24,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: isMobile ? 24 : 32),
+
+                            // Quantity Display
+                            Container(
+                              constraints: BoxConstraints(
+                                minWidth: isMobile ? 60 : 80,
+                              ),
+                              child: Text(
+                                '$_quantity',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: isMobile ? 32 : 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal.shade800,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: isMobile ? 24 : 32),
+
+                            // Increase Button
+                            Container(
+                              width: isMobile ? 44 : 56,
+                              height: isMobile ? 44 : 56,
+                              decoration: BoxDecoration(
+                                color: _quantity < widget.item.stock
+                                    ? Colors.teal.shade600
+                                    : Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: IconButton(
+                                onPressed: _quantity < widget.item.stock
+                                    ? () => setState(() => _quantity++)
+                                    : null,
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: isMobile ? 20 : 24,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: isMobile ? 8 : 12),
+
+                      // Max quantity hint
+                      Center(
+                        child: Text(
+                          'Maximum: ${widget.item.stock}',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: isMobile ? 12 : 14,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: isMobile ? 24 : 32),
+
+                      // Total Price Card
+                      Container(
+                        padding: EdgeInsets.all(isMobile ? 20.0 : 24.0),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.blue.shade50, Colors.blue.shade100],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.blue.shade200,
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blue.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart,
+                                  color: Colors.blue.shade700,
+                                  size: isMobile ? 20 : 24,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Total Amount',
+                                  style: TextStyle(
+                                    fontSize: isMobile ? 16 : 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue.shade800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: isMobile ? 12 : 16),
+                            Text(
+                              '€${totalPrice.toStringAsFixed(0)}',
+                              style: TextStyle(
+                                fontSize: isMobile ? 36 : 44,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade700,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                            SizedBox(height: isMobile ? 4 : 8),
+                            Text(
+                              '$_quantity × €${widget.item.price.toStringAsFixed(0)}',
+                              style: TextStyle(
+                                fontSize: isMobile ? 14 : 16,
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: isMobile ? 32 : 40),
+
+                      // Sell Button
+                      SizedBox(
+                        height: isMobile ? 54 : 64,
+                        child: ElevatedButton(
+                          onPressed: widget.item.stock > 0 && !_isSelling
+                              ? _showConfirmationDialog
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal.shade600,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 4,
+                          ),
+                          child: _isSelling
+                              ? SizedBox(
+                                  width: isMobile ? 20 : 24,
+                                  height: isMobile ? 20 : 24,
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      size: isMobile ? 20 : 24,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'CONFIRM SALE',
+                                      style: TextStyle(
+                                        fontSize: isMobile ? 16 : 18,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+
+                      // Bottom spacing for better scrolling
+                      SizedBox(height: isMobile ? 24 : 32),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, bool isMobile) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$label: ',
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: isMobile ? 13 : 15,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: Colors.grey.shade800,
+              fontSize: isMobile ? 13 : 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

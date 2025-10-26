@@ -4,7 +4,7 @@
 //adding reference who added stock
 //session store during login
 //increase image size of inventory
-
+//view detail a button and image do not show in below widget when clikc on view details
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +12,7 @@ import 'package:inventory_system/firebase/firebase_service.dart';
 import 'package:inventory_system/login_screen.dart';
 import 'package:inventory_system/sales_screen.dart';
 import 'package:inventory_system/sales_report_screen.dart';
-import 'package:inventory_system/stock_history_screen.dart'; // NEW: Import
+import 'package:inventory_system/stock_history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -77,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen>
     setState(() => _isAuthReady = true);
   }
 
-  // MODIFIED: Updated _sellItem to navigate to SalesScreen with the item
   Future<void> _sellItem(FurnitureItem item) async {
     Navigator.push(
       context,
@@ -222,14 +221,14 @@ class _HomeScreenState extends State<HomeScreen>
           children: [
             CircleAvatar(
               backgroundColor: color.withOpacity(isLow ? 0.2 : 0.1),
-              radius: isMobile ? 18 : 24,
-              child: Icon(icon, color: color, size: isMobile ? 20 : 28),
+              radius: isMobile ? 16 : 20,
+              child: Icon(icon, color: color, size: isMobile ? 18 : 24),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
               '$count',
               style: TextStyle(
-                fontSize: isMobile ? 16 : 22,
+                fontSize: isMobile ? 14 : 18,
                 fontWeight: isLow ? FontWeight.w900 : FontWeight.bold,
                 color: isLow ? Colors.red.shade700 : color.shade800,
               ),
@@ -237,16 +236,13 @@ class _HomeScreenState extends State<HomeScreen>
             Text(
               label,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: isMobile ? 10 : 14,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: isMobile ? 9 : 12, color: Colors.grey),
             ),
             if (isLow)
               Text(
                 'LOW',
                 style: TextStyle(
-                  fontSize: isMobile ? 8 : 10,
+                  fontSize: isMobile ? 7 : 9,
                   fontWeight: FontWeight.w900,
                   color: Colors.red.shade700,
                 ),
@@ -259,18 +255,18 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildFilterRow(String category, bool isMobile) {
     return Container(
-      padding: EdgeInsets.all(isMobile ? 16 : 24),
+      padding: EdgeInsets.all(isMobile ? 12 : 16),
       margin: EdgeInsets.symmetric(
-        horizontal: isMobile ? 12 : 24,
-        vertical: isMobile ? 16 : 12,
+        horizontal: isMobile ? 8 : 16,
+        vertical: isMobile ? 8 : 12,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.teal.withOpacity(0.1),
-            blurRadius: 10,
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -279,11 +275,11 @@ class _HomeScreenState extends State<HomeScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               'Filter Inventory',
               style: TextStyle(
-                fontSize: isMobile ? 18 : 22,
+                fontSize: isMobile ? 16 : 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.teal.shade800,
               ),
@@ -298,14 +294,14 @@ class _HomeScreenState extends State<HomeScreen>
                   category,
                   (v) => setState(() => _selectedDesign = v),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _buildFilter(
                   'Size',
                   _selectedSize,
                   category,
                   (v) => setState(() => _selectedSize = v),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 _buildFilter(
                   'Color',
                   _selectedColor,
@@ -382,16 +378,16 @@ class _HomeScreenState extends State<HomeScreen>
             labelText: field,
             labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: 14,
             ),
             isDense: true,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 16,
+              horizontal: 12,
+              vertical: 12,
             ),
           ),
-          icon: const Icon(Icons.keyboard_arrow_down, size: 28),
+          icon: const Icon(Icons.keyboard_arrow_down, size: 24),
           items: items
               .map<DropdownMenuItem<String>>(
                 (v) => DropdownMenuItem<String>(
@@ -399,8 +395,8 @@ class _HomeScreenState extends State<HomeScreen>
                   child: Text(
                     v,
                     style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -459,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen>
               item: item,
               isLow: item.stock <= _lowStockThreshold,
               isSelling: _sellingItems[item.id] == true,
-              onSell: () => _sellItem(item), // MODIFIED: Pass the item object
+              onSell: () => _sellItem(item),
               onSet: () =>
                   _showStockDialog(item.id, item.model, item.stock, false),
               onAdd: () =>
@@ -503,7 +499,7 @@ class _HomeScreenState extends State<HomeScreen>
         title: Text(
           'Inventory Dashboard',
           style: TextStyle(
-            fontSize: isMobile ? 20 : 26,
+            fontSize: isMobile ? 18 : 24,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -521,7 +517,7 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Text(
                       t,
                       style: TextStyle(
-                        fontSize: isMobile ? 14 : (isTablet ? 16 : 18),
+                        fontSize: isMobile ? 13 : (isTablet ? 15 : 16),
                       ),
                     ),
                   ),
@@ -537,82 +533,93 @@ class _HomeScreenState extends State<HomeScreen>
       drawer: _buildDrawer(isMobile),
       body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.all(isMobile ? 12 : 24),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: isMobile ? 16 : 24,
-                horizontal: 8,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.teal.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: _buildStockItem(
-                      Icons.bed,
-                      'Beds',
-                      _firebaseService.streamTotalStock('Bed'),
-                      Colors.teal,
-                      isMobile,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildStockItem(
-                      Icons.chair_alt,
-                      'Sofas',
-                      _firebaseService.streamTotalStock('Sofa'),
-                      Colors.indigo,
-                      isMobile,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildStockItem(
-                      Icons.restaurant,
-                      'Dining',
-                      _firebaseService.streamTotalStock('Dining Table'),
-                      Colors.orange,
-                      isMobile,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildStockItem(
-                      Icons.tv,
-                      'TV Tables',
-                      _firebaseService.streamTotalStock('TV Table'),
-                      Colors.purple,
-                      isMobile,
-                    ),
-                  ),
-                  Expanded(
-                    child: _buildStockItem(
-                      Icons.checkroom,
-                      'Wardrobes',
-                      _firebaseService.streamTotalStock('Wardrobe'),
-                      Colors.brown,
-                      isMobile,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // CHANGED: Made the stock bar scrollable with content
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: _tabs
-                  .map((c) => _buildTabContent(c, isMobile))
-                  .toList(),
+            child: CustomScrollView(
+              slivers: [
+                // Stock summary bar as a sliver
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.all(isMobile ? 8 : 16),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: isMobile ? 10 : 12,
+                        horizontal: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.teal.withOpacity(0.15),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(
+                            child: _buildStockItem(
+                              Icons.bed,
+                              'Beds',
+                              _firebaseService.streamTotalStock('Bed'),
+                              Colors.teal,
+                              isMobile,
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildStockItem(
+                              Icons.chair_alt,
+                              'Sofas',
+                              _firebaseService.streamTotalStock('Sofa'),
+                              Colors.indigo,
+                              isMobile,
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildStockItem(
+                              Icons.restaurant,
+                              'Dining',
+                              _firebaseService.streamTotalStock('Dining Table'),
+                              Colors.orange,
+                              isMobile,
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildStockItem(
+                              Icons.tv,
+                              'TV Tables',
+                              _firebaseService.streamTotalStock('TV Table'),
+                              Colors.purple,
+                              isMobile,
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildStockItem(
+                              Icons.checkroom,
+                              'Wardrobes',
+                              _firebaseService.streamTotalStock('Wardrobe'),
+                              Colors.brown,
+                              isMobile,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Tab content
+                SliverFillRemaining(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: _tabs
+                        .map((c) => _buildTabContent(c, isMobile))
+                        .toList(),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -620,7 +627,6 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // UPDATED: Drawer builder method with Stock History option
   Widget _buildDrawer(bool isMobile) {
     return Drawer(
       child: ListView(
@@ -637,13 +643,11 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ),
-
-          // NEW: Stock History Option
           ListTile(
             leading: const Icon(Icons.history, color: Colors.orange, size: 26),
             title: const Text('Stock History', style: TextStyle(fontSize: 18)),
             onTap: () {
-              Navigator.pop(context); // Close drawer
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -653,13 +657,11 @@ class _HomeScreenState extends State<HomeScreen>
               );
             },
           ),
-
-          // Existing Sales Report Option
           ListTile(
             leading: const Icon(Icons.analytics, color: Colors.blue, size: 26),
             title: const Text('Sales Report', style: TextStyle(fontSize: 18)),
             onTap: () {
-              Navigator.pop(context); // Close drawer
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -669,7 +671,6 @@ class _HomeScreenState extends State<HomeScreen>
               );
             },
           ),
-
           const Divider(),
           ListTile(
             leading: const Icon(
@@ -686,7 +687,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 }
 
-class _ItemCard extends StatelessWidget {
+class _ItemCard extends StatefulWidget {
   final FurnitureItem item;
   final bool isLow, isSelling, isMobile;
   final VoidCallback onSell, onSet, onAdd;
@@ -700,6 +701,13 @@ class _ItemCard extends StatelessWidget {
     required this.onAdd,
     required this.isMobile,
   });
+
+  @override
+  State<_ItemCard> createState() => _ItemCardState();
+}
+
+class _ItemCardState extends State<_ItemCard> {
+  bool _isExpanded = false;
 
   static IconData _getCategoryIcon(String category) {
     switch (category) {
@@ -719,290 +727,515 @@ class _ItemCard extends StatelessWidget {
   }
 
   static String _getCategoryImage(String category, String design) {
-    // Example images - Replace these URLs with your actual product images
     final Map<String, Map<String, String>> categoryImages = {
       'Sofa': {
+        // Modern contemporary sofas with distinct styles
         'Carol':
-            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400',
+            'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=1200&h=800&fit=crop', // Modern grey sofa
         'Anton':
-            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
+            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&h=800&fit=crop', // Elegant blue velvet sofa
         'Bostan':
-            'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=400',
+            'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=1200&h=800&fit=crop', // Tufted brown leather sofa
         'Artic':
-            'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400',
+            'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=1200&h=800&fit=crop', // White minimalist sofa
         'Relax':
-            'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=400',
+            'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200&h=800&fit=crop', // Cozy beige sofa with pillows
         'Antario':
-            'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=400',
+            'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=1200&h=800&fit=crop', // Dark modern sectional
         'Handerson':
-            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400',
+            'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200&h=800&fit=crop', // Classic fabric sofa
         'Enzo':
-            'https://images.unsplash.com/photo-1558211583-803ea7c22743?w=400',
+            'https://images.unsplash.com/photo-1598300188706-f9c3926fe0c0?w=1200&h=800&fit=crop', // Mid-century modern sofa
         'Loca':
-            'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400',
+            'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=1200&h=800&fit=crop', // Contemporary grey sectional
         'Ibiza':
-            'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=400',
+            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop', // Bright modern sofa
         'Carol Corner':
-            'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400',
+            'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200&h=800&fit=crop', // L-shaped corner sofa
       },
       'Bed': {
+        // Different bed styles
         'Platform':
-            'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=400',
+            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&h=800&fit=crop', // Modern platform bed
         'Storage':
-            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=400',
+            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&h=800&fit=crop', // Bed with storage drawers
         'Four Poster':
-            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400',
+            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&h=800&fit=crop', // Classic four poster bed
       },
       'Dining Table': {
+        // Different dining table types
         'Glass Top':
-            'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=400',
+            'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&h=800&fit=crop', // Modern glass dining table
         'Solid Wood':
-            'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=400',
+            'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=1200&h=800&fit=crop', // Rustic wooden dining table
         'Pedestal':
-            'https://images.unsplash.com/photo-1617806118062-17c3006f30ca?w=400',
+            'https://images.unsplash.com/photo-1617806118062-17c3006f30ca?w=1200&h=800&fit=crop', // Round pedestal dining table
       },
       'TV Table': {
+        // Different TV stand designs
         'Metal Frame':
-            'https://images.unsplash.com/photo-1593359863503-f598de57d1eb?w=400',
+            'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200&h=800&fit=crop', // Industrial metal TV stand
         'Wall Mount':
-            'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=400',
+            'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=1200&h=800&fit=crop', // Wall-mounted TV unit
         'Cabinet':
-            'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=400',
+            'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&h=800&fit=crop', // Traditional TV cabinet
       },
       'Wardrobe': {
+        // Different wardrobe configurations
         'Side Mirror':
-            'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400',
+            'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=1200&h=800&fit=crop', // Modern wardrobe with side mirror
         'Center Mirror':
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
+            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=800&fit=crop', // Wardrobe with center mirror doors
         'Internal Side':
-            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=400',
+            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200&h=800&fit=crop', // Spacious wardrobe interior
       },
     };
 
     return categoryImages[category]?[design] ??
-        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400';
+        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop';
   }
 
   @override
   Widget build(BuildContext context) {
-    final stockColor = isLow ? Colors.red.shade700 : Colors.teal.shade700;
-
     return Card(
-      elevation: 4,
+      elevation: 3,
       margin: EdgeInsets.symmetric(
-        horizontal: isMobile ? 12 : 24,
-        vertical: 10,
+        horizontal: widget.isMobile ? 8 : 16,
+        vertical: 6,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ExpansionTile(
-        tilePadding: EdgeInsets.symmetric(
-          horizontal: isMobile ? 14 : 20,
-          vertical: 12,
-        ),
-        leading: Container(
-          width: isMobile ? 48 : 60,
-          height: isMobile ? 48 : 60,
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade300, width: 1),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: item.design != null
-                ? Image.network(
-                    _getCategoryImage(item.category, item.design!),
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Icon(
-                      _getCategoryIcon(item.category),
-                      size: isMobile ? 28 : 36,
-                      color: Colors.teal.shade400,
-                    ),
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.teal.shade400,
+      child: Column(
+        children: [
+          // ENHANCED: Better aspect ratio for complete image visibility
+          AspectRatio(
+            aspectRatio: 16 / 9, // Standard widescreen ratio for better viewing
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Main product image with better fit
+                  widget.item.design != null
+                      ? Image.network(
+                          _getCategoryImage(
+                            widget.item.category,
+                            widget.item.design!,
+                          ),
+                          fit: BoxFit.cover, // Changed to cover for full image
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                color: Colors.grey.shade200,
+                                child: Center(
+                                  child: Icon(
+                                    _getCategoryIcon(widget.item.category),
+                                    size: 50,
+                                    color: Colors.teal.shade400,
+                                  ),
+                                ),
+                              ),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: Colors.grey.shade200,
+                              child: Center(
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: Colors.teal.shade400,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Container(
+                          color: Colors.grey.shade200,
+                          child: Center(
+                            child: Icon(
+                              _getCategoryIcon(widget.item.category),
+                              size: 50,
+                              color: Colors.teal.shade400,
+                            ),
                           ),
                         ),
-                      );
-                    },
-                  )
-                : Icon(
-                    _getCategoryIcon(item.category),
-                    size: isMobile ? 28 : 36,
-                    color: Colors.teal.shade400,
+
+                  // Lighter gradient for better image visibility
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.center,
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
                   ),
-          ),
-        ),
-        title: Text(
-          item.model,
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: isMobile ? 16 : 20,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text(
-              '${item.design} | ${item.color} | ${item.size}',
-              style: TextStyle(
-                fontSize: isMobile ? 12 : 14,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '€${item.price.toStringAsFixed(0)}',
-              style: TextStyle(
-                fontSize: isMobile ? 14 : 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.green.shade700,
-              ),
-            ),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 8 : 12,
-                vertical: isMobile ? 4 : 6,
-              ),
-              decoration: BoxDecoration(
-                color: isLow
-                    ? const Color(0xFFFFCDD2)
-                    : stockColor.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: stockColor),
-              ),
-              child: Text(
-                '${item.stock}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isMobile ? 14 : 18,
-                  color: stockColor,
-                ),
-              ),
-            ),
-            SizedBox(width: isMobile ? 6 : 10),
-            SizedBox(
-              height: isMobile ? 32 : 38,
-              child: OutlinedButton(
-                onPressed: onSet,
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12),
-                ),
-                child: Text(
-                  'SET',
-                  style: TextStyle(
-                    fontSize: isMobile ? 11 : 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: isMobile ? 6 : 10),
-            SizedBox(
-              height: isMobile ? 32 : 38,
-              child: ElevatedButton(
-                onPressed: item.stock > 0 && !isSelling ? onSell : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isLow
-                      ? Colors.red.shade600
-                      : Colors.teal.shade600,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12),
-                ),
-                child: isSelling
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
+
+                  // Product info overlay - more compact
+                  Positioned(
+                    left: 12,
+                    bottom: 10,
+                    right: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.item.model,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            shadows: [
+                              Shadow(blurRadius: 3, color: Colors.black87),
+                            ],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      )
-                    : Text(
-                        'SELL',
-                        style: TextStyle(
-                          fontSize: isMobile ? 11 : 13,
+                        const SizedBox(height: 2),
+                        Text(
+                          '${widget.item.design} • ${widget.item.color} • ${widget.item.size}',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.95),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            shadows: const [
+                              Shadow(blurRadius: 2, color: Colors.black87),
+                            ],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Stock badge in top right - more compact
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: widget.isLow
+                            ? Colors.red.shade600
+                            : Colors.teal.shade600,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        '${widget.item.stock}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
+                  ),
+
+                  // Price badge in top left
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade700,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        '€${widget.item.price.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-        children: [
+          ),
+
+          // ACTION BUTTONS SECTION - More compact
           Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.all(12),
+            child: Row(
               children: [
-                const Divider(height: 20),
-                Text(
-                  'Details',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.teal.shade800,
+                // Sell Button
+                Expanded(
+                  child: SizedBox(
+                    height: 36,
+                    child: ElevatedButton.icon(
+                      onPressed: widget.item.stock > 0 && !widget.isSelling
+                          ? widget.onSell
+                          : null,
+                      icon: widget.isSelling
+                          ? const SizedBox(
+                              width: 14,
+                              height: 14,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Icon(Icons.shopping_cart, size: 16),
+                      label: Text(
+                        widget.isSelling ? 'SELLING' : 'SELL',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.isLow
+                            ? Colors.red.shade600
+                            : Colors.teal.shade600,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 14),
-                Text(
-                  'Price: €${item.price.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.green.shade700,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Design: ${item.design}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                Text(
-                  'Color: ${item.color}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                Text(
-                  'Size: ${item.size}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 18),
+
+                const SizedBox(width: 8),
+
+                // Set Stock Button
                 SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: onAdd,
-                    icon: const Icon(Icons.add_business, size: 24),
-                    label: const Text(
-                      'Add Stock',
+                  height: 36,
+                  width: 70,
+                  child: OutlinedButton(
+                    onPressed: widget.onSet,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'SET',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade600,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+
+                const SizedBox(width: 8),
+
+                // Add Stock Button
+                SizedBox(
+                  height: 36,
+                  width: 120,
+                  child: OutlinedButton(
+                    onPressed: widget.onAdd,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'ADD STOCK',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
+
+          // CHANGED: Show details button with +/- icon
+          InkWell(
+            onTap: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                border: Border(top: BorderSide(color: Colors.grey.shade200)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _isExpanded ? Icons.remove : Icons.add,
+                    size: 18,
+                    color: Colors.teal.shade700,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    _isExpanded ? 'Show Less Details' : 'Show More Details',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.teal.shade700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // CHANGED: Details section without image repetition
+          if (_isExpanded)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                border: Border(top: BorderSide(color: Colors.grey.shade200)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product information
+                  _buildDetailRow(
+                    Icons.inventory_2,
+                    'Model',
+                    widget.item.model,
+                    Colors.teal.shade700,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildDetailRow(
+                    Icons.design_services,
+                    'Design',
+                    widget.item.design ?? 'N/A',
+                    Colors.indigo.shade700,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildDetailRow(
+                    Icons.palette,
+                    'Color',
+                    widget.item.color ?? 'N/A',
+                    Colors.purple.shade700,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildDetailRow(
+                    Icons.straighten,
+                    'Size',
+                    widget.item.size ?? 'N/A',
+                    Colors.orange.shade700,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildDetailRow(
+                    Icons.euro,
+                    'Price',
+                    '€${widget.item.price.toStringAsFixed(0)}',
+                    Colors.green.shade700,
+                  ),
+
+                  // Last updated information if available
+                  if (widget.item.lastUpdatedBy != null &&
+                      widget.item.lastUpdatedAt != null) ...[
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                      Icons.person,
+                      'Updated By',
+                      widget.item.lastUpdatedBy!,
+                      Colors.grey.shade600,
+                    ),
+                  ],
+
+                  const SizedBox(height: 16),
+
+                  // Full-width Add Stock button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: widget.onAdd,
+                      icon: const Icon(Icons.add_business, size: 18),
+                      label: const Text(
+                        'Add More Stock',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade600,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
+    );
+  }
+
+  // CHANGED: Helper method for detail rows with icons
+  Widget _buildDetailRow(
+    IconData icon,
+    String label,
+    String value,
+    Color color,
+  ) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 10),
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.grey.shade700,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: color,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
