@@ -109,11 +109,10 @@ class _HomeScreenState extends State<HomeScreen>
     final controller = TextEditingController(
       text: isIncrease ? '' : current.toString(),
     );
-    if (!isIncrease) {
+    if (!isIncrease)
       controller.selection = TextSelection.collapsed(
         offset: controller.text.length,
       );
-    }
 
     showDialog(
       context: context,
@@ -191,11 +190,10 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> _increaseStock(String id, String model, int qty) async {
     try {
       await _firebaseService.increaseStock(id, qty);
-      if (mounted) {
+      if (mounted)
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Added $qty to $model')));
-      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -220,7 +218,6 @@ class _HomeScreenState extends State<HomeScreen>
         return Column(
           children: [
             CircleAvatar(
-              // ignore: deprecated_member_use
               backgroundColor: color.withOpacity(isLow ? 0.2 : 0.1),
               radius: isMobile ? 16 : 20,
               child: Icon(icon, color: color, size: isMobile ? 18 : 24),
@@ -681,7 +678,8 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 }
-// Add this to the END of home_screen.dart file (after _HomeScreenState class)
+
+// CONTINUE IN PART 2...// Add this to the END of home_screen.dart file (after _HomeScreenState class)
 
 class _ItemCard extends StatefulWidget {
   final FurnitureItem item;
@@ -726,75 +724,74 @@ class _ItemCardState extends State<_ItemCard> {
     final Map<String, Map<String, String>> categoryImages = {
       'Sofa': {
         'Antario':
-            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200',
+            'https://images.dfs.co.uk/i/dfs/sanantonio_zg_superclub_fossil_view1',
         'Anton':
-            'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=1200',
+            'https://quildinc.co.uk/cdn/shop/products/s-l1600_39bd43a4-81ec-4a7b-b89a-c349f3a9abd5_2048x2048.jpg?v=1618049170',
         'Artic':
-            'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn3AGOWMOtF6TD7V8a9b0oJW80yI4iCGcELxGAht2wKqZyAJwiUP55weLsp91RhSEbjn0&usqp=CAU',
         'Bostan':
-            'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn3AGOWMOtF6TD7V8a9b0oJW80yI4iCGcELxGAht2wKqZyAJwiUP55weLsp91RhSEbjn0&usqp=CAU',
         'Carol':
-            'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUADue-_tBo5mOuTqKCPGsoCyu2PjtlwlQKA&s',
         'Carol Corner':
-            'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUADue-_tBo5mOuTqKCPGsoCyu2PjtlwlQKA&s',
         'Enzo':
-            'https://images.unsplash.com/photo-1598300188706-f9c3926fe0c0?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsx_WMyAnrRNv9nF3IhgCy5xQ-f5tuSLc7dA&s',
         'Handerson':
-            'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoWt2y_fcbSINwB2RHFXQhahRA4M2wtiEh0A&s',
         'Ibiza':
-            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200',
+            'https://imperialliving.com.cy/cdn/shop/files/Ibiza_Sofa_4.webp?v=1743601631',
         'Loca':
-            'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvzuDVAhf7tr6mw_gvnJ3MsS_BRDitoZ-izw&s',
         'Relax':
-            'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200',
+            'https://imperialliving.com.cy/cdn/shop/files/Lisboa_Relax_Sofa_1.webp?v=1743601631',
       },
       'Bed': {
         'Sleigh':
-            'https://www.amareliving.com/wp-content/uploads/2022/04/chestefield-sleigh-ottoman-storage-bed-450x450.jpg',
+            'https://www.heavenlybeds.co.uk/cdn/shop/files/new-scroll-naples-19-1_34ca72be-fafc-41f9-8b04-87066113be2d.png?v=1759913544&width=460',
         'Panel':
-            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200',
+            'https://www.luxelivinginteriors.co.za/cdn/shop/files/d8a0e26f74364edb5e1c9e4ef81aa568.jpg?v=1712532135',
         'Hilton':
-            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200',
+            'https://newlookhome.eu/cdn/shop/files/1_8d971cdd-c5b9-47cd-8a9a-d7f94883c3cd.jpg?v=1738085760&width=2048',
         'Florida':
-            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQihl0Efz8PDCmYQRlGeCopr7zk3Q6qijcXlA&s',
         'Divan':
-            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk4Ax2U5_FLmuvQam6sg0hUHIw1bUTmq5kwA&s',
         'Mattress':
-            'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200',
+            'https://cdn.thewirecutter.com/wp-content/media/2024/03/foam-mattress-2048px-6701.jpg?auto=webp&quality=75&width=1024',
         'Gas Lift':
-            'https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200',
+            'https://bestinbeds.com.au/cdn/shop/files/Barcelona-Gas-Lift-Bed-Walnut.jpg?v=1733717711',
         'Platform':
             'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=1200',
         'Storage':
-            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200',
+            'https://lofthome.com/cdn/shop/collections/storage-beds.jpg?v=1729409988',
         'Four Poster':
             'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200',
       },
       'Dining Table': {
         'Glass Top':
-            'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200',
+            'https://m.media-amazon.com/images/I/91y0RhC5uIL._AC_UF894,1000_QL80_.jpg',
         'Solid Wood':
-            'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=1200',
-        'Pedestal':
-            'https://images.unsplash.com/photo-1617806118062-17c3006f30ca?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpQVYxJHxvRF0vI5B_nCXG5WK8vRKYNg6QTw&s',
+        'Pedestal': 'https://m.media-amazon.com/images/I/91EXiD1TIXL.jpg',
       },
       'TV Table': {
         'Metal Frame':
-            'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200',
+            'https://static-01.daraz.pk/p/5039a23c1c47ddf372eb136b9a724c68.jpg',
         'Wall Mount':
-            'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=1200',
+            'https://efurniture.pk/cdn/shop/files/4_b6dfb02d-0dde-4848-ae17-20fa55ebfff4.jpg?v=1751531486',
         'Cabinet':
-            'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200',
+            'https://img.drz.lazcdn.com/static/pk/p/250544e1df17b36e7a11ca7883de14ae.jpg_720x720q80.jpg',
       },
       'Wardrobe': {
         'Side Mirror':
-            'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=1200',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4uIIpTEpFz-EYrjgcjIurhfOuznuFX_SrosewxB0wKOt0SbBr7V4oIIvmU8iIBC3Rf1w&usqp=CAU',
         'Center Mirror':
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200',
+            'https://i.ebayimg.com/images/g/nSAAAOSwz6tnkqMK/s-l1200.jpg',
         'Inside Mirror':
-            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200',
+            'https://www.wakefit.co/blog/wp-content/uploads/2025/03/Untitled-1000-x-1000-px-4.png',
         'Internal Side':
-            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200',
+            'https://m.media-amazon.com/images/I/61JxkpNDXyL._UF350,350_QL80_.jpg',
       },
     };
     return categoryImages[category]?[design] ??
@@ -930,387 +927,269 @@ class _ItemCardState extends State<_ItemCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      margin: EdgeInsets.symmetric(
-        horizontal: widget.isMobile ? 8 : 16,
-        vertical: 6,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: widget.isMobile
+            ? double.infinity
+            : 600, // Max width on desktop
       ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  widget.item.design != null
-                      ? Image.network(
-                          _getCategoryImage(
-                            widget.item.category,
-                            widget.item.design!,
-                          ),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
+      child: Card(
+        elevation: 3,
+        margin: EdgeInsets.symmetric(
+          horizontal: widget.isMobile ? 8 : 16,
+          vertical: 6,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          children: [
+            Container(
+              height: widget.isMobile
+                  ? 180
+                  : 280, // Fixed height based on device
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    widget.item.design != null
+                        ? Image.network(
+                            _getCategoryImage(
+                              widget.item.category,
+                              widget.item.design!,
+                            ),
+                            fit: BoxFit.cover, // Changed from BoxFit.fill
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  color: Colors.grey.shade200,
+                                  child: Center(
+                                    child: Icon(
+                                      _getCategoryIcon(widget.item.category),
+                                      size: 50,
+                                      color: Colors.teal.shade400,
+                                    ),
+                                  ),
+                                ),
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
                                 color: Colors.grey.shade200,
                                 child: Center(
-                                  child: Icon(
-                                    _getCategoryIcon(widget.item.category),
-                                    size: 50,
-                                    color: Colors.teal.shade400,
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.5,
+                                      color: Colors.teal.shade400,
+                                    ),
                                   ),
                                 ),
+                              );
+                            },
+                          )
+                        : Container(
+                            color: Colors.grey.shade200,
+                            child: Center(
+                              child: Icon(
+                                _getCategoryIcon(widget.item.category),
+                                size: 50,
+                                color: Colors.teal.shade400,
                               ),
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              color: Colors.grey.shade200,
-                              child: Center(
-                                child: SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2.5,
-                                    color: Colors.teal.shade400,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : Container(
-                          color: Colors.grey.shade200,
-                          child: Center(
-                            child: Icon(
-                              _getCategoryIcon(widget.item.category),
-                              size: 50,
-                              color: Colors.teal.shade400,
                             ),
                           ),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                          colors: [
+                            Colors.black.withOpacity(0.7),
+                            Colors.transparent,
+                          ],
                         ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.center,
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.transparent,
+                      ),
+                    ),
+                    Positioned(
+                      left: 12,
+                      bottom: 10,
+                      right: 12,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.item.model,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(blurRadius: 3, color: Colors.black87),
+                              ],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${widget.item.design} • ${widget.item.color} • ${widget.item.size}',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.95),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              shadows: const [
+                                Shadow(blurRadius: 2, color: Colors.black87),
+                              ],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  Positioned(
-                    left: 12,
-                    bottom: 10,
-                    right: 12,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.item.model,
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: widget.isLow
+                              ? Colors.red.shade600
+                              : Colors.teal.shade600,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 3,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          '${widget.item.stock}',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(blurRadius: 3, color: Colors.black87),
-                            ],
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${widget.item.design} • ${widget.item.color} • ${widget.item.size}',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.95),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            shadows: const [
-                              Shadow(blurRadius: 2, color: Colors.black87),
-                            ],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: widget.isLow
-                            ? Colors.red.shade600
-                            : Colors.teal.shade600,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 3,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        '${widget.item.stock}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade700,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 3,
-                            offset: const Offset(0, 1),
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade700,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 3,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          '€${widget.item.price.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                      child: Text(
-                        '€${widget.item.price.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 36,
-                    child: ElevatedButton.icon(
-                      onPressed: widget.item.stock > 0 && !widget.isSelling
-                          ? widget.onSell
-                          : null,
-                      icon: widget.isSelling
-                          ? const SizedBox(
-                              width: 14,
-                              height: 14,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Icon(Icons.shopping_cart, size: 16),
-                      label: Text(
-                        widget.isSelling ? 'SELLING' : 'SELL',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 36,
+                      child: ElevatedButton.icon(
+                        onPressed: widget.item.stock > 0 && !widget.isSelling
+                            ? widget.onSell
+                            : null,
+                        icon: widget.isSelling
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(Icons.shopping_cart, size: 16),
+                        label: Text(
+                          widget.isSelling ? 'SELLING' : 'SELL',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: widget.isLow
+                              ? Colors.red.shade600
+                              : Colors.teal.shade600,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: widget.isLow
-                            ? Colors.red.shade600
-                            : Colors.teal.shade600,
-                        foregroundColor: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 36,
+                    width: 70,
+                    child: OutlinedButton(
+                      onPressed: widget.onSet,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  height: 36,
-                  width: 70,
-                  child: OutlinedButton(
-                    onPressed: widget.onSet,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'SET',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  height: 36,
-                  width: 120,
-                  child: OutlinedButton(
-                    onPressed: widget.onAdd,
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'ADD STOCK',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () => setState(() => _isExpanded = !_isExpanded),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                border: Border(top: BorderSide(color: Colors.grey.shade200)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    _isExpanded ? Icons.remove : Icons.add,
-                    size: 18,
-                    color: Colors.teal.shade700,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    _isExpanded ? 'Show Less Details' : 'Show More Details',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.teal.shade700,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (_isExpanded)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                border: Border(top: BorderSide(color: Colors.grey.shade200)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDetailRow(
-                    Icons.inventory_2,
-                    'Model',
-                    widget.item.model,
-                    Colors.teal.shade700,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildDetailRow(
-                    Icons.design_services,
-                    'Design',
-                    widget.item.design ?? 'N/A',
-                    Colors.indigo.shade700,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildDetailRow(
-                    Icons.palette,
-                    'Color',
-                    widget.item.color ?? 'N/A',
-                    Colors.purple.shade700,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildDetailRow(
-                    Icons.straighten,
-                    'Size',
-                    widget.item.size ?? 'N/A',
-                    Colors.orange.shade700,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDetailRow(
-                          Icons.euro,
-                          'Price',
-                          '€${widget.item.price.toStringAsFixed(0)}',
-                          Colors.green.shade700,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => _showEditPriceDialog(context),
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.blue.shade600,
-                          size: 20,
-                        ),
-                        tooltip: 'Edit Price',
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                    ],
-                  ),
-                  if (widget.item.lastUpdatedBy != null &&
-                      widget.item.lastUpdatedAt != null) ...[
-                    const SizedBox(height: 10),
-                    _buildDetailRow(
-                      Icons.person,
-                      'Updated By',
-                      widget.item.lastUpdatedBy!,
-                      Colors.grey.shade600,
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: widget.onAdd,
-                      icon: const Icon(Icons.add_business, size: 18),
-                      label: const Text(
-                        'Add More Stock',
+                      child: const Text(
+                        'SET',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green.shade600,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 36,
+                    width: 120,
+                    child: OutlinedButton(
+                      onPressed: widget.onAdd,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'ADD STOCK',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -1318,7 +1197,137 @@ class _ItemCardState extends State<_ItemCard> {
                 ],
               ),
             ),
-        ],
+            InkWell(
+              onTap: () => setState(() => _isExpanded = !_isExpanded),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _isExpanded ? Icons.remove : Icons.add,
+                      size: 18,
+                      color: Colors.teal.shade700,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _isExpanded ? 'Show Less Details' : 'Show More Details',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.teal.shade700,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (_isExpanded)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDetailRow(
+                      Icons.inventory_2,
+                      'Model',
+                      widget.item.model,
+                      Colors.teal.shade700,
+                    ),
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                      Icons.design_services,
+                      'Design',
+                      widget.item.design ?? 'N/A',
+                      Colors.indigo.shade700,
+                    ),
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                      Icons.palette,
+                      'Color',
+                      widget.item.color ?? 'N/A',
+                      Colors.purple.shade700,
+                    ),
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                      Icons.straighten,
+                      'Size',
+                      widget.item.size ?? 'N/A',
+                      Colors.orange.shade700,
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildDetailRow(
+                            Icons.euro,
+                            'Price',
+                            '€${widget.item.price.toStringAsFixed(0)}',
+                            Colors.green.shade700,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _showEditPriceDialog(context),
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.blue.shade600,
+                            size: 20,
+                          ),
+                          tooltip: 'Edit Price',
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                    if (widget.item.lastUpdatedBy != null &&
+                        widget.item.lastUpdatedAt != null) ...[
+                      const SizedBox(height: 10),
+                      _buildDetailRow(
+                        Icons.person,
+                        'Updated By',
+                        widget.item.lastUpdatedBy!,
+                        Colors.grey.shade600,
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: widget.onAdd,
+                        icon: const Icon(Icons.add_business, size: 18),
+                        label: const Text(
+                          'Add More Stock',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade600,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
