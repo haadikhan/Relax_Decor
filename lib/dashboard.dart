@@ -1,10 +1,3 @@
-//removing signup button --done
-//before adding a popup opens to confirm --done
-
-//adding reference who added stock
-//session store during login
-//increase image size of inventory
-//view detail a button and image do not show in below widget when clikc on view details
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen>
   String? _selectedDesign = 'All Designs';
   String? _selectedColor = 'All Colors';
   String? _selectedSize = 'All Sizes';
+
+  FirebaseService get firebaseService => _firebaseService;
 
   @override
   void initState() {
@@ -114,10 +109,11 @@ class _HomeScreenState extends State<HomeScreen>
     final controller = TextEditingController(
       text: isIncrease ? '' : current.toString(),
     );
-    if (!isIncrease)
+    if (!isIncrease) {
       controller.selection = TextSelection.collapsed(
         offset: controller.text.length,
       );
+    }
 
     showDialog(
       context: context,
@@ -178,30 +174,34 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> _updateStock(String id, String model, int qty) async {
     try {
       await _firebaseService.updateStock(id, qty);
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('$model set to $qty')));
+      }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Failed: ${_parseError(e)}')));
+      }
     }
   }
 
   Future<void> _increaseStock(String id, String model, int qty) async {
     try {
       await _firebaseService.increaseStock(id, qty);
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Added $qty to $model')));
+      }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Failed: ${_parseError(e)}')));
+      }
     }
   }
 
@@ -220,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen>
         return Column(
           children: [
             CircleAvatar(
+              // ignore: deprecated_member_use
               backgroundColor: color.withOpacity(isLow ? 0.2 : 0.1),
               radius: isMobile ? 16 : 20,
               child: Icon(icon, color: color, size: isMobile ? 18 : 24),
@@ -371,7 +372,6 @@ class _HomeScreenState extends State<HomeScreen>
         final selected = (value != null && items.contains(value))
             ? value
             : allOption;
-
         return DropdownButtonFormField<String>(
           value: selected,
           decoration: InputDecoration(
@@ -426,7 +426,6 @@ class _HomeScreenState extends State<HomeScreen>
               style: const TextStyle(color: Colors.red),
             ),
           );
-
         final items = snapshot.data ?? [];
         if (items.isEmpty) {
           return ListView(
@@ -444,7 +443,6 @@ class _HomeScreenState extends State<HomeScreen>
             ],
           );
         }
-
         return ListView.builder(
           padding: const EdgeInsets.only(bottom: 16),
           itemCount: items.length + 1,
@@ -533,11 +531,9 @@ class _HomeScreenState extends State<HomeScreen>
       drawer: _buildDrawer(isMobile),
       body: Column(
         children: [
-          // CHANGED: Made the stock bar scrollable with content
           Expanded(
             child: CustomScrollView(
               slivers: [
-                // Stock summary bar as a sliver
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(isMobile ? 8 : 16),
@@ -610,7 +606,6 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                 ),
-                // Tab content
                 SliverFillRemaining(
                   child: TabBarView(
                     controller: _tabController,
@@ -686,6 +681,7 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 }
+// Add this to the END of home_screen.dart file (after _HomeScreenState class)
 
 class _ItemCard extends StatefulWidget {
   final FurnitureItem item;
@@ -729,70 +725,207 @@ class _ItemCardState extends State<_ItemCard> {
   static String _getCategoryImage(String category, String design) {
     final Map<String, Map<String, String>> categoryImages = {
       'Sofa': {
-        // Modern contemporary sofas with distinct styles
-        'Carol':
-            'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=1200&h=800&fit=crop', // Modern grey sofa
-        'Anton':
-            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&h=800&fit=crop', // Elegant blue velvet sofa
-        'Bostan':
-            'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=1200&h=800&fit=crop', // Tufted brown leather sofa
-        'Artic':
-            'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=1200&h=800&fit=crop', // White minimalist sofa
-        'Relax':
-            'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200&h=800&fit=crop', // Cozy beige sofa with pillows
         'Antario':
-            'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=1200&h=800&fit=crop', // Dark modern sectional
-        'Handerson':
-            'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200&h=800&fit=crop', // Classic fabric sofa
-        'Enzo':
-            'https://images.unsplash.com/photo-1598300188706-f9c3926fe0c0?w=1200&h=800&fit=crop', // Mid-century modern sofa
-        'Loca':
-            'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=1200&h=800&fit=crop', // Contemporary grey sectional
-        'Ibiza':
-            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop', // Bright modern sofa
+            'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200',
+        'Anton':
+            'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=1200',
+        'Artic':
+            'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=1200',
+        'Bostan':
+            'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=1200',
+        'Carol':
+            'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=1200',
         'Carol Corner':
-            'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200&h=800&fit=crop', // L-shaped corner sofa
+            'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=1200',
+        'Enzo':
+            'https://images.unsplash.com/photo-1598300188706-f9c3926fe0c0?w=1200',
+        'Handerson':
+            'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=1200',
+        'Ibiza':
+            'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200',
+        'Loca':
+            'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=1200',
+        'Relax':
+            'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=1200',
       },
       'Bed': {
-        // Different bed styles
+        'Sleigh':
+            'https://www.amareliving.com/wp-content/uploads/2022/04/chestefield-sleigh-ottoman-storage-bed-450x450.jpg',
+        'Panel':
+            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200',
+        'Hilton':
+            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200',
+        'Florida':
+            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200',
+        'Divan':
+            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200',
+        'Mattress':
+            'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200',
+        'Gas Lift':
+            'https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200',
         'Platform':
-            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&h=800&fit=crop', // Modern platform bed
+            'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=1200',
         'Storage':
-            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&h=800&fit=crop', // Bed with storage drawers
+            'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200',
         'Four Poster':
-            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&h=800&fit=crop', // Classic four poster bed
+            'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200',
       },
       'Dining Table': {
-        // Different dining table types
         'Glass Top':
-            'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&h=800&fit=crop', // Modern glass dining table
+            'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200',
         'Solid Wood':
-            'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=1200&h=800&fit=crop', // Rustic wooden dining table
+            'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=1200',
         'Pedestal':
-            'https://images.unsplash.com/photo-1617806118062-17c3006f30ca?w=1200&h=800&fit=crop', // Round pedestal dining table
+            'https://images.unsplash.com/photo-1617806118062-17c3006f30ca?w=1200',
       },
       'TV Table': {
-        // Different TV stand designs
         'Metal Frame':
-            'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200&h=800&fit=crop', // Industrial metal TV stand
+            'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=1200',
         'Wall Mount':
-            'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=1200&h=800&fit=crop', // Wall-mounted TV unit
+            'https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=1200',
         'Cabinet':
-            'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200&h=800&fit=crop', // Traditional TV cabinet
+            'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=1200',
       },
       'Wardrobe': {
-        // Different wardrobe configurations
         'Side Mirror':
-            'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=1200&h=800&fit=crop', // Modern wardrobe with side mirror
+            'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=1200',
         'Center Mirror':
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=800&fit=crop', // Wardrobe with center mirror doors
+            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200',
+        'Inside Mirror':
+            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200',
         'Internal Side':
-            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200&h=800&fit=crop', // Spacious wardrobe interior
+            'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1200',
       },
     };
-
     return categoryImages[category]?[design] ??
-        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop';
+        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200';
+  }
+
+  void _showEditPriceDialog(BuildContext context) {
+    final controller = TextEditingController(
+      text: widget.item.price.toStringAsFixed(0),
+    );
+    controller.selection = TextSelection.collapsed(
+      offset: controller.text.length,
+    );
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Row(
+          children: [
+            Icon(Icons.euro, color: Colors.green.shade700, size: 24),
+            const SizedBox(width: 8),
+            const Expanded(
+              child: Text(
+                'Edit Price',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Product: ${widget.item.model}',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Current Price: €${widget.item.price.toStringAsFixed(0)}',
+              style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+              ],
+              decoration: InputDecoration(
+                labelText: 'New Price (€)',
+                hintText: 'Enter price',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefixIcon: Icon(Icons.euro, color: Colors.green.shade600),
+                suffixText: 'EUR',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newPrice = double.tryParse(controller.text);
+              if (newPrice != null && newPrice > 0) {
+                Navigator.pop(dialogContext);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Updating price...'),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+                try {
+                  final firebaseService = context
+                      .findAncestorStateOfType<_HomeScreenState>()
+                      ?.firebaseService;
+                  if (firebaseService != null) {
+                    await firebaseService.updateItemPrice(
+                      widget.item.id,
+                      newPrice,
+                    );
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Price updated to €${newPrice.toStringAsFixed(0)}',
+                          ),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to update price: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              } else {
+                ScaffoldMessenger.of(dialogContext).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter a valid price'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green.shade600,
+            ),
+            child: const Text('Update Price'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -806,9 +939,8 @@ class _ItemCardState extends State<_ItemCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
-          // ENHANCED: Better aspect ratio for complete image visibility
           AspectRatio(
-            aspectRatio: 16 / 9, // Standard widescreen ratio for better viewing
+            aspectRatio: 16 / 9,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
@@ -817,14 +949,13 @@ class _ItemCardState extends State<_ItemCard> {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Main product image with better fit
                   widget.item.design != null
                       ? Image.network(
                           _getCategoryImage(
                             widget.item.category,
                             widget.item.design!,
                           ),
-                          fit: BoxFit.cover, // Changed to cover for full image
+                          fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
                                 color: Colors.grey.shade200,
@@ -863,8 +994,6 @@ class _ItemCardState extends State<_ItemCard> {
                             ),
                           ),
                         ),
-
-                  // Lighter gradient for better image visibility
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -877,8 +1006,6 @@ class _ItemCardState extends State<_ItemCard> {
                       ),
                     ),
                   ),
-
-                  // Product info overlay - more compact
                   Positioned(
                     left: 12,
                     bottom: 10,
@@ -916,8 +1043,6 @@ class _ItemCardState extends State<_ItemCard> {
                       ],
                     ),
                   ),
-
-                  // Stock badge in top right - more compact
                   Positioned(
                     top: 8,
                     right: 8,
@@ -949,8 +1074,6 @@ class _ItemCardState extends State<_ItemCard> {
                       ),
                     ),
                   ),
-
-                  // Price badge in top left
                   Positioned(
                     top: 8,
                     left: 8,
@@ -984,13 +1107,10 @@ class _ItemCardState extends State<_ItemCard> {
               ),
             ),
           ),
-
-          // ACTION BUTTONS SECTION - More compact
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                // Sell Button
                 Expanded(
                   child: SizedBox(
                     height: 36,
@@ -1027,10 +1147,7 @@ class _ItemCardState extends State<_ItemCard> {
                     ),
                   ),
                 ),
-
                 const SizedBox(width: 8),
-
-                // Set Stock Button
                 SizedBox(
                   height: 36,
                   width: 70,
@@ -1051,10 +1168,7 @@ class _ItemCardState extends State<_ItemCard> {
                     ),
                   ),
                 ),
-
                 const SizedBox(width: 8),
-
-                // Add Stock Button
                 SizedBox(
                   height: 36,
                   width: 120,
@@ -1078,14 +1192,8 @@ class _ItemCardState extends State<_ItemCard> {
               ],
             ),
           ),
-
-          // CHANGED: Show details button with +/- icon
           InkWell(
-            onTap: () {
-              setState(() {
-                _isExpanded = !_isExpanded;
-              });
-            },
+            onTap: () => setState(() => _isExpanded = !_isExpanded),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               decoration: BoxDecoration(
@@ -1113,8 +1221,6 @@ class _ItemCardState extends State<_ItemCard> {
               ),
             ),
           ),
-
-          // CHANGED: Details section without image repetition
           if (_isExpanded)
             Container(
               padding: const EdgeInsets.all(16),
@@ -1125,7 +1231,6 @@ class _ItemCardState extends State<_ItemCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Product information
                   _buildDetailRow(
                     Icons.inventory_2,
                     'Model',
@@ -1154,14 +1259,29 @@ class _ItemCardState extends State<_ItemCard> {
                     Colors.orange.shade700,
                   ),
                   const SizedBox(height: 10),
-                  _buildDetailRow(
-                    Icons.euro,
-                    'Price',
-                    '€${widget.item.price.toStringAsFixed(0)}',
-                    Colors.green.shade700,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildDetailRow(
+                          Icons.euro,
+                          'Price',
+                          '€${widget.item.price.toStringAsFixed(0)}',
+                          Colors.green.shade700,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => _showEditPriceDialog(context),
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.blue.shade600,
+                          size: 20,
+                        ),
+                        tooltip: 'Edit Price',
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
                   ),
-
-                  // Last updated information if available
                   if (widget.item.lastUpdatedBy != null &&
                       widget.item.lastUpdatedAt != null) ...[
                     const SizedBox(height: 10),
@@ -1172,10 +1292,7 @@ class _ItemCardState extends State<_ItemCard> {
                       Colors.grey.shade600,
                     ),
                   ],
-
                   const SizedBox(height: 16),
-
-                  // Full-width Add Stock button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -1206,7 +1323,6 @@ class _ItemCardState extends State<_ItemCard> {
     );
   }
 
-  // CHANGED: Helper method for detail rows with icons
   Widget _buildDetailRow(
     IconData icon,
     String label,

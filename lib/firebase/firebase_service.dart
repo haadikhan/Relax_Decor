@@ -11,8 +11,8 @@ class FurnitureItem {
   final String? design;
   final String? color;
   final String? size;
-  final String? lastUpdatedBy; // NEW: Track who updated
-  final DateTime? lastUpdatedAt; // NEW: Track when updated
+  final String? lastUpdatedBy;
+  final DateTime? lastUpdatedAt;
 
   FurnitureItem({
     required this.id,
@@ -23,8 +23,8 @@ class FurnitureItem {
     this.design,
     this.color,
     this.size,
-    this.lastUpdatedBy, // NEW
-    this.lastUpdatedAt, // NEW
+    this.lastUpdatedBy,
+    this.lastUpdatedAt,
   });
 
   factory FurnitureItem.fromFirestore(DocumentSnapshot doc) {
@@ -38,17 +38,14 @@ class FurnitureItem {
       design: data['design'] as String?,
       color: data['color'] as String?,
       size: data['size'] as String?,
-      lastUpdatedBy: data['lastUpdatedBy'] as String?, // NEW
-      lastUpdatedAt:
-          data['lastUpdatedAt'] !=
-              null // NEW
+      lastUpdatedBy: data['lastUpdatedBy'] as String?,
+      lastUpdatedAt: data['lastUpdatedAt'] != null
           ? (data['lastUpdatedAt'] as Timestamp).toDate()
           : null,
     );
   }
 }
 
-// NEW: Stock Update Record Model
 class StockUpdateRecord {
   final String id;
   final String itemId;
@@ -59,10 +56,12 @@ class StockUpdateRecord {
   final int previousStock;
   final int newStock;
   final int changeAmount;
-  final String updateType; // 'set' or 'increase'
+  final String updateType;
   final String? design;
   final String? color;
   final String? size;
+  final double? previousPrice;
+  final double? newPrice;
 
   StockUpdateRecord({
     required this.id,
@@ -78,6 +77,8 @@ class StockUpdateRecord {
     this.design,
     this.color,
     this.size,
+    this.previousPrice,
+    this.newPrice,
   });
 
   factory StockUpdateRecord.fromFirestore(DocumentSnapshot doc) {
@@ -96,11 +97,17 @@ class StockUpdateRecord {
       design: data['design'] as String?,
       color: data['color'] as String?,
       size: data['size'] as String?,
+      previousPrice: data['previousPrice'] != null
+          ? (data['previousPrice'] as num).toDouble()
+          : null,
+      newPrice: data['newPrice'] != null
+          ? (data['newPrice'] as num).toDouble()
+          : null,
     );
   }
 
   Map<String, dynamic> toFirestore() {
-    return {
+    final map = {
       'itemId': itemId,
       'category': category,
       'model': model,
@@ -114,10 +121,12 @@ class StockUpdateRecord {
       'color': color,
       'size': size,
     };
+    if (previousPrice != null) map['previousPrice'] = previousPrice;
+    if (newPrice != null) map['newPrice'] = newPrice;
+    return map;
   }
 }
 
-// Sales Record Model
 class SalesRecord {
   final String id;
   final String itemId;
@@ -178,7 +187,6 @@ class SalesRecord {
   }
 }
 
-// Monthly Sales Summary Model
 class MonthlySalesSummary {
   final String category;
   final int totalItemsSold;
@@ -195,7 +203,6 @@ class MonthlySalesSummary {
   });
 }
 
-/// Service class to handle all interactions with Firestore.
 class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _appId;
@@ -211,7 +218,6 @@ class FirebaseService {
         .collection('inventory_items');
   }
 
-  // Sales collection reference
   CollectionReference<Map<String, dynamic>> get _salesCollectionRef {
     return _db
         .collection('artifacts')
@@ -221,7 +227,6 @@ class FirebaseService {
         .collection('sales_records');
   }
 
-  // NEW: Stock updates collection reference
   CollectionReference<Map<String, dynamic>> get _stockUpdatesCollectionRef {
     return _db
         .collection('artifacts')
@@ -231,9 +236,7 @@ class FirebaseService {
         .collection('stock_updates');
   }
 
-  // REAL RELAX DECOR INVENTORY DATA
   final List<Map<String, dynamic>> _realInventoryData = [
-    // ========== SOFAS ==========
     {
       'category': 'Sofa',
       'model': 'Carol Sofa 3 Seater',
@@ -351,7 +354,6 @@ class FirebaseService {
       'price': 1200.0,
       'stock': 5,
     },
-    // ========== BEDS ==========
     {
       'category': 'Bed',
       'model': 'Platform Bed King',
@@ -379,7 +381,69 @@ class FirebaseService {
       'price': 850.0,
       'stock': 3,
     },
-    // ========== DINING TABLES ==========
+    {
+      'category': 'Bed',
+      'model': 'Sleigh Bed King',
+      'design': 'Sleigh',
+      'size': '180x200cm',
+      'color': 'Black',
+      'price': 550.0,
+      'stock': 10,
+    },
+    {
+      'category': 'Bed',
+      'model': 'Panel Bed Queen',
+      'design': 'Panel',
+      'size': '160x200cm',
+      'color': 'Grey',
+      'price': 470.0,
+      'stock': 12,
+    },
+    {
+      'category': 'Bed',
+      'model': 'Hilton Bed King',
+      'design': 'Hilton',
+      'size': '180x200cm',
+      'color': 'Cream',
+      'price': 580.0,
+      'stock': 8,
+    },
+    {
+      'category': 'Bed',
+      'model': 'Florida Bed Queen',
+      'design': 'Florida',
+      'size': '160x200cm',
+      'color': 'Grey',
+      'price': 510.0,
+      'stock': 10,
+    },
+    {
+      'category': 'Bed',
+      'model': 'Divan Bed with Drawer',
+      'design': 'Divan',
+      'size': '160x200cm',
+      'color': 'Black',
+      'price': 500.0,
+      'stock': 11,
+    },
+    {
+      'category': 'Bed',
+      'model': 'Mattress Queen',
+      'design': 'Mattress',
+      'size': '160x200cm',
+      'color': 'White',
+      'price': 220.0,
+      'stock': 28,
+    },
+    {
+      'category': 'Bed',
+      'model': 'Gas Lift Storage',
+      'design': 'Gas Lift',
+      'size': '160x200cm',
+      'color': 'Grey',
+      'price': 420.0,
+      'stock': 15,
+    },
     {
       'category': 'Dining Table',
       'model': 'Glass Top Dining Table',
@@ -407,7 +471,6 @@ class FirebaseService {
       'price': 520.0,
       'stock': 4,
     },
-    // ========== TV TABLES ==========
     {
       'category': 'TV Table',
       'model': 'Metal Frame TV Stand',
@@ -435,7 +498,6 @@ class FirebaseService {
       'price': 220.0,
       'stock': 6,
     },
-    // ========== WARDROBES ==========
     {
       'category': 'Wardrobe',
       'model': 'Side Mirror Wardrobe',
@@ -465,23 +527,20 @@ class FirebaseService {
     },
   ];
 
-  /// Checks if the inventory collection is empty and seeds it with REAL RELAX DECOR data if necessary.
   Future<void> seedInventoryIfEmpty() async {
     try {
       final snapshot = await _inventoryCollectionRef.limit(1).get();
       if (snapshot.docs.isEmpty) {
-        debugPrint('🔄 Inventory empty. Seeding RELAX DECOR data...');
+        debugPrint('🔄 Inventory empty. Seeding data...');
         final batch = _db.batch();
         for (var itemData in _realInventoryData) {
           final docRef = _inventoryCollectionRef.doc();
           batch.set(docRef, itemData);
         }
         await batch.commit();
-        debugPrint(
-          '✅ Seeded ${_realInventoryData.length} items (35 Sofas + samples for other categories)',
-        );
+        debugPrint('✅ Seeded ${_realInventoryData.length} items');
       } else {
-        debugPrint('✓ Inventory already contains data. Skipping seed.');
+        debugPrint('✓ Inventory already contains data.');
       }
     } catch (e) {
       debugPrint('❌ Error seeding inventory: $e');
@@ -489,7 +548,6 @@ class FirebaseService {
     }
   }
 
-  /// Streams inventory filtered by category and optional attributes (design, color, size).
   Stream<List<FurnitureItem>> streamInventory(
     String categoryName, {
     String? design,
@@ -500,24 +558,18 @@ class FirebaseService {
       'category',
       isEqualTo: categoryName,
     );
-
-    if (design != null && !design.startsWith('All ')) {
+    if (design != null && !design.startsWith('All '))
       query = query.where('design', isEqualTo: design);
-    }
-    if (color != null && !color.startsWith('All ')) {
+    if (color != null && !color.startsWith('All '))
       query = query.where('color', isEqualTo: color);
-    }
-    if (size != null && !size.startsWith('All ')) {
+    if (size != null && !size.startsWith('All '))
       query = query.where('size', isEqualTo: size);
-    }
-
     return query.snapshots().map(
       (snapshot) =>
           snapshot.docs.map((doc) => FurnitureItem.fromFirestore(doc)).toList(),
     );
   }
 
-  /// Fetches distinct filter values (Design, Color, Size) for a given category.
   Stream<List<String>> streamDistinctValues(
     String categoryName,
     String fieldName,
@@ -526,13 +578,12 @@ class FirebaseService {
         .where('category', isEqualTo: categoryName)
         .snapshots()
         .map((snapshot) {
-          final List<String> values = snapshot.docs
+          final values = snapshot.docs
               .map((doc) => doc.data()[fieldName] as String?)
               .where((value) => value != null && value.isNotEmpty)
               .map((value) => value!)
               .toSet()
               .toList();
-
           final defaultName =
               'All ${fieldName[0].toUpperCase()}${fieldName.substring(1)}s';
           values.sort();
@@ -540,22 +591,16 @@ class FirebaseService {
         });
   }
 
-  // MODIFIED: Updated sellItem to record sales with price
   Future<void> sellItem(String itemId, int quantity, FurnitureItem item) async {
     await _db.runTransaction((transaction) async {
       final itemRef = _inventoryCollectionRef.doc(itemId);
       final doc = await transaction.get(itemRef);
-
       if (!doc.exists) throw Exception('Item not found');
-
       final currentStock = (doc.data() as Map<String, dynamic>)['stock'] as int;
       if (currentStock >= quantity) {
-        // Update inventory stock
         transaction.update(itemRef, {'stock': currentStock - quantity});
-
-        // Record the sale
         final salesRecord = SalesRecord(
-          id: '', // Will be auto-generated
+          id: '',
           itemId: itemId,
           category: item.category,
           model: item.model,
@@ -567,7 +612,6 @@ class FirebaseService {
           color: item.color,
           size: item.size,
         );
-
         final salesDocRef = _salesCollectionRef.doc();
         transaction.set(salesDocRef, salesRecord.toFirestore());
       } else {
@@ -578,37 +622,25 @@ class FirebaseService {
     });
   }
 
-  // NEW: Get current user email
-  String? getCurrentUserEmail() {
-    return FirebaseAuth.instance.currentUser?.email;
-  }
+  String? getCurrentUserEmail() => FirebaseAuth.instance.currentUser?.email;
 
-  // MODIFIED: Update stock with user tracking
   Future<void> updateStock(String itemId, int newQuantity) async {
     if (newQuantity < 0) throw Exception('Stock quantity cannot be negative.');
-
     final itemRef = _inventoryCollectionRef.doc(itemId);
     final userEmail = getCurrentUserEmail() ?? 'Unknown User';
     final now = DateTime.now();
-
     await _db.runTransaction((transaction) async {
-      // Get current item data
       final doc = await transaction.get(itemRef);
       if (!doc.exists) throw Exception('Item not found');
-
       final currentData = doc.data() as Map<String, dynamic>;
       final previousStock = (currentData['stock'] as num).toInt();
-
-      // Update inventory
       transaction.update(itemRef, {
         'stock': newQuantity,
         'lastUpdatedBy': userEmail,
         'lastUpdatedAt': Timestamp.fromDate(now),
       });
-
-      // Record stock update
       final stockUpdateRecord = StockUpdateRecord(
-        id: '', // Auto-generated
+        id: '',
         itemId: itemId,
         category: currentData['category'] as String,
         model: currentData['model'] as String,
@@ -622,41 +654,30 @@ class FirebaseService {
         color: currentData['color'] as String?,
         size: currentData['size'] as String?,
       );
-
       final updateDocRef = _stockUpdatesCollectionRef.doc();
       transaction.set(updateDocRef, stockUpdateRecord.toFirestore());
     });
   }
 
-  // MODIFIED: Increase stock with user tracking
   Future<void> increaseStock(String itemId, int increaseAmount) async {
-    if (increaseAmount <= 0) {
+    if (increaseAmount <= 0)
       throw Exception('Increase amount must be positive.');
-    }
-
     final itemRef = _inventoryCollectionRef.doc(itemId);
     final userEmail = getCurrentUserEmail() ?? 'Unknown User';
     final now = DateTime.now();
-
     await _db.runTransaction((transaction) async {
-      // Get current item data
       final doc = await transaction.get(itemRef);
       if (!doc.exists) throw Exception('Item not found');
-
       final currentData = doc.data() as Map<String, dynamic>;
       final previousStock = (currentData['stock'] as num).toInt();
       final newStock = previousStock + increaseAmount;
-
-      // Update inventory
       transaction.update(itemRef, {
         'stock': FieldValue.increment(increaseAmount),
         'lastUpdatedBy': userEmail,
         'lastUpdatedAt': Timestamp.fromDate(now),
       });
-
-      // Record stock update
       final stockUpdateRecord = StockUpdateRecord(
-        id: '', // Auto-generated
+        id: '',
         itemId: itemId,
         category: currentData['category'] as String,
         model: currentData['model'] as String,
@@ -670,7 +691,43 @@ class FirebaseService {
         color: currentData['color'] as String?,
         size: currentData['size'] as String?,
       );
+      final updateDocRef = _stockUpdatesCollectionRef.doc();
+      transaction.set(updateDocRef, stockUpdateRecord.toFirestore());
+    });
+  }
 
+  Future<void> updateItemPrice(String itemId, double newPrice) async {
+    if (newPrice <= 0) throw Exception('Price must be greater than zero.');
+    final itemRef = _inventoryCollectionRef.doc(itemId);
+    final userEmail = getCurrentUserEmail() ?? 'Unknown User';
+    final now = DateTime.now();
+    await _db.runTransaction((transaction) async {
+      final doc = await transaction.get(itemRef);
+      if (!doc.exists) throw Exception('Item not found');
+      final currentData = doc.data() as Map<String, dynamic>;
+      final previousPrice = (currentData['price'] as num).toDouble();
+      transaction.update(itemRef, {
+        'price': newPrice,
+        'lastUpdatedBy': userEmail,
+        'lastUpdatedAt': Timestamp.fromDate(now),
+      });
+      final stockUpdateRecord = StockUpdateRecord(
+        id: '',
+        itemId: itemId,
+        category: currentData['category'] as String,
+        model: currentData['model'] as String,
+        updatedBy: userEmail,
+        updatedAt: now,
+        previousStock: (currentData['stock'] as num).toInt(),
+        newStock: (currentData['stock'] as num).toInt(),
+        changeAmount: 0,
+        updateType: 'price_update',
+        design: currentData['design'] as String?,
+        color: currentData['color'] as String?,
+        size: currentData['size'] as String?,
+        previousPrice: previousPrice,
+        newPrice: newPrice,
+      );
       final updateDocRef = _stockUpdatesCollectionRef.doc();
       transaction.set(updateDocRef, stockUpdateRecord.toFirestore());
     });
@@ -681,14 +738,13 @@ class FirebaseService {
         .where('category', isEqualTo: categoryName)
         .snapshots()
         .map(
-          // ignore: avoid_types_as_parameter_names
-          (snapshot) => snapshot.docs.fold(0, (sum, doc) {
-            return sum + (doc.data()['stock'] as num).toInt();
-          }),
+          (snapshot) => snapshot.docs.fold(
+            0,
+            (sum, doc) => sum + (doc.data()['stock'] as num).toInt(),
+          ),
         );
   }
 
-  // NEW: Get all stock updates
   Stream<List<StockUpdateRecord>> getStockUpdates() {
     return _stockUpdatesCollectionRef
         .orderBy('updatedAt', descending: true)
@@ -700,7 +756,6 @@ class FirebaseService {
         );
   }
 
-  // NEW: Get stock updates for a specific item
   Stream<List<StockUpdateRecord>> getStockUpdatesForItem(String itemId) {
     return _stockUpdatesCollectionRef
         .where('itemId', isEqualTo: itemId)
@@ -713,16 +768,13 @@ class FirebaseService {
         );
   }
 
-  // Get sales records for a specific month
   Stream<List<SalesRecord>> getMonthlySales(int year, int month) {
-    // Calculate start and end of the month
     final startDate = DateTime(year, month, 1);
     final endDate = DateTime(
       year,
       month + 1,
       1,
     ).subtract(const Duration(days: 1));
-
     return _salesCollectionRef
         .where(
           'saleDate',
@@ -738,14 +790,12 @@ class FirebaseService {
         );
   }
 
-  // Get monthly sales summary by category
   Stream<List<MonthlySalesSummary>> getMonthlySalesSummary(
     int year,
     int month,
   ) {
     return getMonthlySales(year, month).map((salesRecords) {
       final Map<String, MonthlySalesSummary> summaryMap = {};
-
       for (final record in salesRecords) {
         final key = record.category;
         if (!summaryMap.containsKey(key)) {
@@ -757,7 +807,6 @@ class FirebaseService {
             month: month,
           );
         }
-
         final current = summaryMap[key]!;
         summaryMap[key] = MonthlySalesSummary(
           category: key,
@@ -767,17 +816,15 @@ class FirebaseService {
           month: month,
         );
       }
-
       return summaryMap.values.toList();
     });
   }
 
-  // Get total monthly revenue
   Stream<double> getTotalMonthlyRevenue(int year, int month) {
-    return getMonthlySales(year, month).map((salesRecords) {
-      // ignore: avoid_types_as_parameter_names
-      return salesRecords.fold(0.0, (sum, record) => sum + record.totalAmount);
-    });
+    return getMonthlySales(year, month).map(
+      (salesRecords) =>
+          salesRecords.fold(0.0, (sum, record) => sum + record.totalAmount),
+    );
   }
 
   Stream<List<SalesRecord>> getCategoryMonthlySales(
@@ -785,13 +832,6 @@ class FirebaseService {
     int year,
     int month,
   ) {
-    final startDate = DateTime(year, month, 1);
-    final endDate = DateTime(
-      year,
-      month + 1,
-      1,
-    ).subtract(const Duration(days: 1));
-
     return _salesCollectionRef
         .where('category', isEqualTo: category)
         .snapshots()
